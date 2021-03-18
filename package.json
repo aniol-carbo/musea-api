@@ -4,14 +4,16 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "SET MODE=dev && node server.js",
     "devStart": "nodemon server.js",
-    "test": "mocha test/api.test.js --exit"
+    "test": "mocha test/ids.test.js --timeout 15000 --exit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "express-ejs-layouts": "^2.5.0",
