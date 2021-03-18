@@ -42,13 +42,17 @@ router.get('/museums/:museumId', (req, res) => {
       descriptions: doc.descriptions,
       image: doc.image
     }
-    for (let i = 0; i < doc.expositions.length; i++) {
-      expoId = doc.expositions[i]
-      Exposition.findById(expoId, (error, expo) => {
-        if (error) console.log(error)
-        result.expositions.push(expo)
-        if (i === result.expositions.length - 1) res.json({ museum: result })
-      })
+    if (doc.expositions.length > 0) {
+      for (let i = 0; i < doc.expositions.length; i++) {
+        expoId = doc.expositions[i]
+        Exposition.findById(expoId, (error, expo) => {
+          if (error) console.log(error)
+          result.expositions.push(expo)
+          if (i === result.expositions.length - 1) res.json({ museum: result })
+        })
+      }
+    } else {
+      res.json({ museum: result })
     }
   })
 })
@@ -67,13 +71,17 @@ router.get('/museums/:museumId/:expositionId', (req, res) => {
       works: [],
       image: doc.image
     }
-    for (let i = 0; i < doc.works.length; i++) {
-      artworkId = doc.works[i]
-      Work.findById(artworkId, (error, work) => {
-        if (error) console.log(error)
-        result.works.push(work)
-        if (i === result.works.length - 1) res.json({ museum: result })
-      })
+    if (doc.works.length > 0) {
+      for (let i = 0; i < doc.works.length; i++) {
+        artworkId = doc.works[i]
+        Work.findById(artworkId, (error, work) => {
+          if (error) console.log(error)
+          result.works.push(work)
+          if (i === result.works.length - 1) res.json({ exposition: result })
+        })
+      }
+    } else {
+      res.json({ exposition: result })
     }
   })
 })
