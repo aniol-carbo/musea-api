@@ -137,7 +137,7 @@ pipeline {
                 sh 'curl https://cli-assets.heroku.com/install.sh | sh'
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'heroku', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
                   sh 'heroku login'
-                  sh "git push https://oviladrosa:Mallorca123*@github.com/oviladrosa/musea.git origin/master"
+                  sh "git push https://oviladrosa:Mallorca123*@github.com/oviladrosa/musea.git"
                 
                }
               
