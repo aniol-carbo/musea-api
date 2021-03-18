@@ -1,7 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
+let url
+if (process.env.MODE !== 'test') url = process.env.DATABASE_URL
+else url = process.env.TEST_DATABASE_URL
+mongoose.connect(url, { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', error => console.error(error))
 // db.once('open', () => console.log('Connected to Mongoose'))
@@ -10,43 +13,9 @@ router.get('/', (req, res) => {
   res.render('index')
 })
 
-const Schema = mongoose.Schema
-const ObjectId = Schema.ObjectId
-
-const MuseumSchema = new Schema({
-  _id: ObjectId,
-  name: String,
-  address: String,
-  city: String,
-  country: String,
-  location: Array,
-  expositions: Array,
-  descriptions: Object,
-  image: String
-})
-const Model = mongoose.model
-const Museum = Model('museums', MuseumSchema) // first parameter is the name of the collection
-
-const ExpositionSchema = new Schema({
-  _id: ObjectId,
-  name: String,
-  room: String,
-  descriptions: Object,
-  works: Array,
-  image: String
-})
-const Exposition = Model('expositions', ExpositionSchema)
-
-const WorkSchema = new Schema({
-  _id: ObjectId,
-  title: String,
-  author: String,
-  descriptions: Object,
-  score: Number,
-  type: String,
-  image: String
-})
-const Work = Model('artworks', WorkSchema)
+const Museum = require('../models/museum')
+const Exposition = require('../models/exposition')
+const Work = require('../models/artwork')
 
 router.get('/museums', (req, res) => {
   // eslint-disable-next-line array-callback-return
