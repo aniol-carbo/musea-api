@@ -139,7 +139,7 @@ pipeline {
                 timeout(time: 1, unit: 'HOURS') {
                         sh 'heroku login' 
                 }
-                sh 'git push heroku develop'
+                sh 'git push heroku origin/master'
             }
           }
           stage('Prod') {
