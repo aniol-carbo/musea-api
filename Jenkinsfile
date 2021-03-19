@@ -13,7 +13,6 @@ pipeline {
       }
       steps {
          echo 'Starting building test docker image'
-         sh 'cat ~/.netrc'
          sh 'npm install'
          
       }
@@ -31,8 +30,9 @@ pipeline {
     }
     stage('Test') {
       environment {
-                DATABASE_URL = 'mongodb+srv://admin:admin@museadb.091dp.mongodb.net/museaDB?retryWrites=true&w=majority'
-            }
+          DATABASE_URL='mongodb+srv://admin:admin@museadb.091dp.mongodb.net/museaDB?retryWrites=true&w=majority'
+          TEST_DATABASE_URL='mongodb+srv://admin:admin@museadb.091dp.mongodb.net/testMusea?retryWrites=true&w=majority'
+          MODE='dev'           }
       agent {
         docker {
           image 'node:10-alpine'
