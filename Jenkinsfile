@@ -136,7 +136,9 @@ pipeline {
                 echo 'deploy to development' 
                 sh 'cat ~/.netrc'
                 sh 'curl https://cli-assets.heroku.com/install.sh | sh'
-                sh 'heroku login'
+                timeout(time: 1, unit: 'HOURS') {
+                        sh 'heroku login' 
+                }
                 sh 'git push heroku master'
             }
           }
