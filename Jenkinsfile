@@ -140,7 +140,7 @@ pipeline {
                         sh 'heroku login' 
                 }
                 sh 'heroku git:remote -a musea-api'
-                sh 'git push heroku origin/master'
+                sh 'git push heroku master'
             }
           }
           stage('Prod') {
