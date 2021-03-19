@@ -134,13 +134,7 @@ pipeline {
             }
             steps {
                 echo 'deploy to development' 
-                sh 'cat ~/.netrc'
-                sh 'curl https://cli-assets.heroku.com/install.sh | sh'
-                timeout(time: 1, unit: 'HOURS') {
-                        sh 'heroku login' 
-                }
-                sh 'heroku git:remote -a musea-api'
-                sh 'git push heroku HEAD:master'
+                
             }
           }
           stage('Prod') {
@@ -151,6 +145,13 @@ pipeline {
             }
             steps {
             echo 'deploy to master' 
+            sh 'cat ~/.netrc'
+                sh 'curl https://cli-assets.heroku.com/install.sh | sh'
+                timeout(time: 1, unit: 'HOURS') {
+                        sh 'heroku login' 
+                }
+                sh 'heroku git:remote -a musea-api'
+                sh 'git push heroku HEAD:master'
             }
           }
         }
