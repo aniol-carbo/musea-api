@@ -139,6 +139,7 @@ pipeline {
                 timeout(time: 1, unit: 'HOURS') {
                         sh 'heroku login' 
                 }
+                sh 'heroku git:remote -a musea-api'
                 sh 'git push heroku origin/master'
             }
           }
