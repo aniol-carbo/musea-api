@@ -135,12 +135,9 @@ pipeline {
             steps {
                 echo 'deploy to development' 
                 sh 'cat ~/.netrc'
-                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'heroku', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-                 
-                  sh "git push https://oviladrosa:Mallorca123*@github.com/oviladrosa/musea.git HEAD:master"
-                
-               }
-              
+                sh 'curl https://cli-assets.heroku.com/install.sh | sh'
+                sh 'heroku login'
+                sh 'git push heroku master'
             }
           }
           stage('Prod') {
