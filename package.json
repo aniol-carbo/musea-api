@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "SET MODE=dev && node server.js",
+    "start": "node server.js",
     "devStart": "nodemon server.js",
     "test": "mocha test/ids.test.js --timeout 15000 --exit"
   },
