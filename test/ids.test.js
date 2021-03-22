@@ -53,8 +53,8 @@ describe('Museums', () => {
         chai.request(server)
           .get('/museums/' + mus.id)
         //   .send(museum)
-          .end((err, res) => {
-            if (err) console.log(err)
+          .end((error, res) => {
+            if (error) console.log(error)
             res.should.have.status(200)
             res.body.should.be.a('object')
             res.body.museum.should.have.property('name')
@@ -82,8 +82,8 @@ describe('Museums', () => {
           chai.request(server)
             .get('/museums/' + mus.id + '/' + expo.id)
           //   .send(museum)
-            .end((err, res) => {
-              if (err) console.log(err)
+            .end((er, res) => {
+              if (er) console.log(er)
               res.should.have.status(200)
               res.body.should.be.a('object')
               res.body.exposition.should.have.property('name')
