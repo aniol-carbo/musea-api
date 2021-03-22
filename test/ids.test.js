@@ -19,8 +19,8 @@ describe('Museums', () => {
   beforeEach((done) => {
     Museum.deleteMany({}, (err) => {
       if (err) console.log(err)
-      Exposition.deleteMany({}, (err) => {
-        if (err) console.log(err)
+      Exposition.deleteMany({}, (error) => {
+        if (error) console.log(error)
         done()
       })
     })
@@ -77,8 +77,8 @@ describe('Museums', () => {
       const exposition = new Exposition({ _id: ObjectId('6048e3baeaf9c527ba4de26b'), name: 'Main Expo', room: 'Main Hall', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
       museum.save((err, mus) => {
         if (err) console.log(err)
-        exposition.save((err, expo) => {
-          if (err) console.log(err)
+        exposition.save((error, expo) => {
+          if (error) console.log(error)
           chai.request(server)
             .get('/museums/' + mus.id + '/' + expo.id)
           //   .send(museum)
