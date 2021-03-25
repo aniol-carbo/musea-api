@@ -9,6 +9,7 @@ const Work = require('../models/artwork')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const server = require('../server')
+// const artwork = require('../models/artwork')
 const should = chai.should()
 
 chai.use(chaiHttp)
@@ -17,11 +18,14 @@ chai.use(chaiHttp)
 describe('Museums', () => {
   // eslint-disable-next-line no-undef
   beforeEach((done) => {
-    Museum.deleteMany({}, (err) => {
-      if (err) console.log(err)
-      Exposition.deleteMany({}, (error) => {
-        if (error) console.log(error)
-        done()
+    Museum.deleteMany({}, (e) => {
+      if (e) console.log(e)
+      Exposition.deleteMany({}, (er) => {
+        if (er) console.log(er)
+        Work.deleteMany({}, (err) => {
+          if (err) console.log(err)
+          done()
+        })
       })
     })
   })
@@ -32,8 +36,8 @@ describe('Museums', () => {
     it('it should GET all the museums', (done) => {
       chai.request(server)
         .get('/museums')
-        .end((err, res) => {
-          if (err) console.log(err)
+        .end((e, res) => {
+          if (e) console.log(e)
           res.should.have.status(200)
           // eslint-disable-next-line no-unused-expressions
           res.should.to.be.json
@@ -48,13 +52,13 @@ describe('Museums', () => {
     // eslint-disable-next-line no-undef
     it('it should GET a museum by the given id', (done) => {
       const museum = new Museum({ _id: ObjectId('6048d3d2eaf9c527ba4de26a'), name: 'MACBA', address: 'Plaça Skaters', city: 'Barcelona', country: 'Spain', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
-      museum.save((err, mus) => {
-        if (err) console.log(err)
+      museum.save((e, mus) => {
+        if (e) console.log(e)
         chai.request(server)
           .get('/museums/' + mus.id)
         //   .send(museum)
-          .end((error, res) => {
-            if (error) console.log(error)
+          .end((er, res) => {
+            if (er) console.log(er)
             res.should.have.status(200)
             res.body.should.be.a('object')
             res.body.museum.should.have.property('name')
@@ -79,15 +83,15 @@ describe('Museums', () => {
     it('it should GET an exposition by the given id', (done) => {
       const museum = new Museum({ _id: ObjectId('6048d3d2eaf9c527ba4de26b'), name: 'Orsay', address: 'Rue Orsay', city: 'Paris', country: 'France', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, expositions: ['6048e3baeaf9c527ba4de26d'], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
       const exposition = new Exposition({ _id: ObjectId('6048e3baeaf9c527ba4de26d'), name: 'Main Expo', room: 'Main Hall', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
-      museum.save((err, mus) => {
-        if (err) console.log(err)
-        exposition.save((error, expo) => {
-          if (error) console.log(error)
+      museum.save((e, mus) => {
+        if (e) console.log(e)
+        exposition.save((er, expo) => {
+          if (er) console.log(er)
           chai.request(server)
             .get('/museums/' + mus.id + '/' + expo.id)
           //   .send(museum)
-            .end((er, res) => {
-              if (er) console.log(er)
+            .end((err, res) => {
+              if (err) console.log(err)
               res.should.have.status(200)
               res.body.should.be.a('object')
               res.body.exposition.should.have.property('name')
@@ -101,6 +105,44 @@ describe('Museums', () => {
               res.body.exposition.should.have.property('_id').eql(mus.expositions[0])
               done()
             })
+        })
+      })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/GET/:museumId/:expositionId/:artworkId ', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET an artwork by the given id', (done) => {
+      const museum = new Museum({ _id: ObjectId('6048d3d2eaf9c527ba4de26b'), name: 'Orsay', address: 'Rue Orsay', city: 'Paris', country: 'France', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, expositions: ['6048e3baeaf9c527ba4de26d'], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      const exposition = new Exposition({ _id: ObjectId('6048e3baeaf9c527ba4de26d'), name: 'Main Expo', room: 'Main Hall', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, works: ['6048dd75eaf9c527ba4de26c'], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      const artwork = new Work({ _id: ObjectId('6048dd75eaf9c527ba4de26c'), title: 'Gioconda', author: 'Leonardo da Vinci', score: 9.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      museum.save((e, mus) => {
+        if (e) console.log(e)
+        exposition.save((er, expo) => {
+          if (er) console.log(er)
+          artwork.save((err, work) => {
+            if (err) console.log(err)
+            chai.request(server)
+              .get('/museums/' + mus.id + '/' + expo.id + '/' + work.id)
+            //   .send(museum)
+              .end((error, res) => {
+                if (error) console.log(error)
+                res.should.have.status(200)
+                res.body.should.be.a('object')
+                res.body.work.should.have.property('title')
+                res.body.work.should.have.property('author')
+                res.body.work.should.have.property('score')
+                res.body.work.should.have.property('descriptions')
+                res.body.work.descriptions.should.have.property('ca')
+                res.body.work.descriptions.should.have.property('es')
+                res.body.work.descriptions.should.have.property('en')
+                res.body.work.should.have.property('image')
+                res.body.work.should.have.property('_id').eql(work.id)
+                res.body.work.should.have.property('_id').eql(expo.works[0])
+                done()
+              })
+          })
         })
       })
     })
