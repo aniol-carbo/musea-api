@@ -10,7 +10,7 @@ const User = require('../models/user')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const server = require('../server')
-// const artwork = require('../models/artwork')
+// eslint-disable-next-line no-unused-vars
 const should = chai.should()
 
 chai.use(chaiHttp)
@@ -35,7 +35,7 @@ describe('Museums', () => {
   })
 
   // eslint-disable-next-line no-undef
-  describe('/GET museum', () => {
+  describe('/GET museums', () => {
     // eslint-disable-next-line no-undef
     it('it should GET all the museums', (done) => {
       chai.request(server)
