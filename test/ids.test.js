@@ -5,6 +5,7 @@ const ObjectId = mongoose.Types.ObjectId
 const Museum = require('../models/museum')
 const Exposition = require('../models/exposition')
 const Work = require('../models/artwork')
+const User = require('../models/user')
 
 const chai = require('chai')
 const chaiHttp = require('chai-http')
@@ -24,7 +25,10 @@ describe('Museums', () => {
         if (er) console.log(er)
         Work.deleteMany({}, (err) => {
           if (err) console.log(err)
-          done()
+          User.deleteMany({}, (erro) => {
+            if (erro) console.log(erro)
+            done()
+          })
         })
       })
     })
@@ -144,6 +148,34 @@ describe('Museums', () => {
               })
           })
         })
+      })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/GET/users/:userId ', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET a user by the given id', (done) => {
+      const user = new User({ _id: ObjectId('606c6f07e8f2bfb8ab667e6f'), userId: 'admin', name: 'Juan', bio: 'Me encanta Da Vinci', favourites: ['6048dd75eaf9c527ba4de26c'], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: ['6048d3d2eaf9c527ba4de26b'] })
+      user.save((e, u) => {
+        if (e) console.log(e)
+        chai.request(server)
+          .get('/users/' + u.userId)
+        //   .send(museum)
+          .end((error, res) => {
+            if (error) console.log(error)
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.user.should.have.property('name')
+            res.body.user.should.have.property('userId')
+            res.body.user.should.have.property('points')
+            res.body.user.should.have.property('favourites')
+            res.body.user.should.have.property('bio')
+            res.body.user.should.have.property('profilePic')
+            res.body.user.should.have.property('premium')
+            res.body.user.should.have.property('visited')
+            done()
+          })
       })
     })
   })

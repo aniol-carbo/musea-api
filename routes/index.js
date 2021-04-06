@@ -16,6 +16,7 @@ router.get('/', (req, res) => {
 const Museum = require('../models/museum')
 const Exposition = require('../models/exposition')
 const Work = require('../models/artwork')
+const User = require('../models/user')
 
 router.get('/museums', (req, res) => {
   // eslint-disable-next-line array-callback-return
@@ -92,6 +93,15 @@ router.get('/museums/:museumId/:expositionId/:workId', (req, res) => {
   Work.findById(id, (err, doc) => {
     if (err) console.log(err)
     res.json({ work: doc })
+  })
+})
+
+router.get('/users/:userId', (req, res) => {
+  const id = req.params.userId
+  // eslint-disable-next-line array-callback-return
+  User.findOne({ userId: id }, (err, doc) => {
+    if (err) console.log(err)
+    res.json({ user: doc })
   })
 })
 
