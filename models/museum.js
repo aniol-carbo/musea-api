@@ -12,7 +12,8 @@ const MuseumSchema = new Schema({
   location: Array,
   expositions: Array,
   descriptions: Object,
-  image: String
+  image: String,
+  restrictions: Array
 })
 
 module.exports = mongoose.model('museums', MuseumSchema)

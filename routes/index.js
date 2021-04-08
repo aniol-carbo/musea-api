@@ -17,6 +17,7 @@ const Museum = require('../models/museum')
 const Exposition = require('../models/exposition')
 const Work = require('../models/artwork')
 const User = require('../models/user')
+const Restriction = require('../models/restriction')
 
 router.get('/museums', (req, res) => {
   // eslint-disable-next-line array-callback-return
@@ -31,7 +32,7 @@ router.get('/museums/:museumId', (req, res) => {
   // eslint-disable-next-line array-callback-return
   Museum.findById(id, (err, doc) => {
     if (err) console.log(err)
-    let expoId
+    let expoId, restrictionId
     const result = {
       _id: doc._id,
       name: doc.name,
@@ -41,15 +42,25 @@ router.get('/museums/:museumId', (req, res) => {
       location: doc.location,
       expositions: [],
       descriptions: doc.descriptions,
-      image: doc.image
+      image: doc.image,
+      restrictions: []
     }
-    if (doc.expositions.length > 0) {
+    if (doc.expositions.length > 0 || doc.restrictions.length > 0) {
       for (let i = 0; i < doc.expositions.length; i++) {
         expoId = doc.expositions[i]
         Exposition.findById(expoId, (error, expo) => {
           if (error) console.log(error)
           result.expositions.push(expo)
-          if (i === result.expositions.length - 1) res.json({ museum: result })
+          if (i === result.expositions.length - 1) {
+            for (let j = 0; j < doc.restrictions.length; j++) {
+              restrictionId = doc.restrictions[j]
+              Restriction.findById(restrictionId, (error, expo) => {
+                if (error) console.log(error)
+                result.restrictions.push(expo)
+                if (j === result.restrictions.length - 1) res.json({ museum: result })
+              })
+            }
+          }
         })
       }
     } else {
