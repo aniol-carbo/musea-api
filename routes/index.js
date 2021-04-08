@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId
 let url
 if (process.env.MODE !== 'test') url = process.env.DATABASE_URL
 else url = process.env.TEST_DATABASE_URL
@@ -114,6 +115,22 @@ router.get('/users/:userId', (req, res) => {
     if (err) console.log(err)
     res.json({ user: doc })
   })
+})
+
+router.post('/museums', (req, res) => {
+  const name = req.query.name
+  const address = req.query.address
+  const city = req.query.city
+  const country = req.query.country
+  const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country })
+  museum.save((e, mus) => {
+    console.log(e)
+    res.send(mus)
+  })
+  // Museum.create(museum, function (e, mus) {
+  //   console.log(e)
+  //   res.send(mus)
+  // })
 })
 
 module.exports = router
