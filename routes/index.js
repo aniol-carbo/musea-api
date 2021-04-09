@@ -109,6 +109,7 @@ router.get('/museums/:museumId/:expositionId/:workId', (req, res) => {
   })
 })
 
+// GET /users/userName to get the user's info
 router.get('/users/:userId', (req, res) => {
   const id = req.params.userId
   // eslint-disable-next-line array-callback-return
@@ -121,9 +122,6 @@ router.get('/users/:userId', (req, res) => {
 // GET /info with query params name=museumName and city=museumCity
 router.get('/info', async (req, res, next) => {
   try {
-    // const neighborhood = 'macba'
-    // const borough = 'raval'
-    // const category = 'art'
     const name = req.query.name
     const city = req.query.city
     const key = process.env.GOOGLE_API_KEY
@@ -168,10 +166,6 @@ router.post('/museums', (req, res) => {
     console.log(e)
     res.send(mus)
   })
-  // Museum.create(museum, function (e, mus) {
-  //   console.log(e)
-  //   res.send(mus)
-  // })
 })
 
 // POST /users/userName with params bio=newBio

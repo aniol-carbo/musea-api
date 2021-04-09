@@ -179,4 +179,29 @@ describe('Museums', () => {
       })
     })
   })
+
+  // eslint-disable-next-line no-undef
+  describe('/GET/info ', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET the info of a museum by the given params: name and city', (done) => {
+      const museum = new Museum({ _id: ObjectId('606f1caf2debc7494cbb1f9d'), name: 'Macba', address: 'Carrer del macba', city: 'Barcelona', country: 'Spain', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      museum.save((e, mus) => {
+        if (e) console.log(e)
+        chai.request(server)
+          .get('/info')
+          .query({ name: mus.name, city: mus.city })
+        //   .send(museum)
+          .end((error, res) => {
+            if (error) console.log(error)
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.info.should.have.property('name')
+            res.body.info.should.have.property('horari')
+            res.body.info.should.have.property('isOpen')
+            res.body.info.should.have.property('afluence')
+            done()
+          })
+      })
+    })
+  })
 })
