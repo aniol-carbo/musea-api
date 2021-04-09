@@ -118,22 +118,6 @@ router.get('/users/:userId', (req, res) => {
   })
 })
 
-router.post('/museums', (req, res) => {
-  const name = req.query.name
-  const address = req.query.address
-  const city = req.query.city
-  const country = req.query.country
-  const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country })
-  museum.save((e, mus) => {
-    console.log(e)
-    res.send(mus)
-  })
-  // Museum.create(museum, function (e, mus) {
-  //   console.log(e)
-  //   res.send(mus)
-  // })
-})
-
 // GET /info with query params name=museumName and city=museumCity
 router.get('/info', async (req, res, next) => {
   try {
@@ -170,6 +154,34 @@ router.get('/info', async (req, res, next) => {
   } catch (err) {
     next(err)
   }
+})
+
+// ----------------- POST -------------------- //
+
+router.post('/museums', (req, res) => {
+  const name = req.query.name
+  const address = req.query.address
+  const city = req.query.city
+  const country = req.query.country
+  const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country })
+  museum.save((e, mus) => {
+    console.log(e)
+    res.send(mus)
+  })
+  // Museum.create(museum, function (e, mus) {
+  //   console.log(e)
+  //   res.send(mus)
+  // })
+})
+
+// POST /users/userName with params bio=newBio
+router.post('/users/:userId', async (req, res) => {
+  const user = req.params.userId
+  const bio = req.query.bio
+  const updated = await User.updateOne({ userId: user }, {
+    bio: bio
+  })
+  res.json(updated)
 })
 
 module.exports = router
