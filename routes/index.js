@@ -1,4 +1,5 @@
 const express = require('express')
+const axios = require('axios')
 const router = express.Router()
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
@@ -131,6 +132,44 @@ router.post('/museums', (req, res) => {
   //   console.log(e)
   //   res.send(mus)
   // })
+})
+
+// GET /info with query params name=museumName and city=museumCity
+router.get('/info', async (req, res, next) => {
+  try {
+    // const neighborhood = 'macba'
+    // const borough = 'raval'
+    // const category = 'art'
+    const name = req.query.name
+    const city = req.query.city
+    const key = process.env.GOOGLE_API_KEY
+    const bestTimeKey = process.env.BESTTIME_API_KEY
+    const { data } = await axios.get(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${name}%20${city}&inputtype=textquery&fields=place_id,photos,formatted_address,name,rating,opening_hours,geometry&key=${key}`
+    )
+    const placeId = data.candidates[0].place_id
+    const address = data.candidates[0].formatted_address
+    const details = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,opening_hours,rating,formatted_phone_number&key=${key}`
+    )
+    const fullName = details.data.result.name
+    const horari = details.data.result.opening_hours.weekday_text
+    const isOpen = details.data.result.opening_hours.open_now
+    const afluence = await axios.post(`https://besttime.app/api/v1/forecasts?api_key_private=${bestTimeKey}&venue_name=${fullName}&venue_address=${address}`
+    )
+    const days = afluence.data.analysis
+    const afluenceInfo = []
+    for (const day in days) {
+      const dayName = days[day].day_info.day_text
+      const hours = days[day].day_raw
+      const fullDay = {
+        dayName: dayName,
+        hours: hours
+      }
+      afluenceInfo.push(fullDay)
+    }
+    res.json({ info: { name: fullName, horari: horari, isOpen: isOpen, afluence: afluenceInfo } })
+  } catch (err) {
+    next(err)
+  }
 })
 
 module.exports = router

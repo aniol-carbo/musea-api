@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "ejs": "^2.6.1",
