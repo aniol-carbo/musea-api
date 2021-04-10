@@ -47,29 +47,44 @@ router.get('/museums/:museumId', (req, res) => {
       image: doc.image,
       restrictions: []
     }
-    // if (doc.expositions.length > 0 || doc.restrictions.length > 0) {
-    for (let i = 0; i < doc.expositions.length; i++) {
-      expoId = doc.expositions[i]
-      Exposition.findById(expoId, (erro, exp) => {
-        if (erro) console.log(erro)
-        result.expositions.push(exp)
-        if (i === doc.expositions.length - 1) {
-          for (let j = 0; j < doc.restrictions.length; j++) {
-            restrictionId = doc.restrictions[j]
-            Restriction.findById(restrictionId, (error, expo) => {
-              if (error) console.log(error)
-              result.restrictions.push(expo)
-              if (j === doc.restrictions.length - 1) res.json({ museum: result })
-            })
+    if (doc.expositions.length > 0) {
+      for (let i = 0; i < doc.expositions.length; i++) {
+        expoId = doc.expositions[i]
+        Exposition.findById(expoId, (erro, exp) => {
+          if (erro) console.log(erro)
+          result.expositions.push(exp)
+          if (i === doc.expositions.length - 1) {
+            if (doc.restrictions.length > 0) {
+              for (let j = 0; j < doc.restrictions.length; j++) {
+                restrictionId = doc.restrictions[j]
+                Restriction.findById(restrictionId, (error, expo) => {
+                  if (error) console.log(error)
+                  result.restrictions.push(expo)
+                  if (j === doc.restrictions.length - 1) res.json({ museum: result })
+                })
+              }
+            } else {
+              res.json({ museum: result })
+            }
+          } else {
+            res.json({ museum: result })
           }
-        } else {
-          res.json({ museum: result })
+        })
+      }
+    } else {
+      if (doc.restrictions.length > 0) {
+        for (let j = 0; j < doc.restrictions.length; j++) {
+          restrictionId = doc.restrictions[j]
+          Restriction.findById(restrictionId, (error, expo) => {
+            if (error) console.log(error)
+            result.restrictions.push(expo)
+            if (j === doc.restrictions.length - 1) res.json({ museum: result })
+          })
         }
-      })
+      } else {
+        res.json({ museum: result })
+      }
     }
-    // } else {
-    //   res.json({ museum: result })
-    // }
   })
 })
 
