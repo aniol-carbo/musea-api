@@ -161,7 +161,12 @@ router.post('/museums', (req, res) => {
   const address = req.query.address
   const city = req.query.city
   const country = req.query.country
-  const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country })
+  const descriptions = {
+    ca: req.query.ca,
+    es: req.query.es,
+    en: req.query.en
+  }
+  const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country, descriptions: descriptions, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
   museum.save((e, mus) => {
     console.log(e)
     res.send(mus)
