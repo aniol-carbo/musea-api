@@ -60,14 +60,14 @@ router.get('/museums/:museumId', (req, res) => {
                 Restriction.findById(restrictionId, (error, expo) => {
                   if (error) console.log(error)
                   result.restrictions.push(expo)
-                  if (j === doc.restrictions.length - 1) res.json({ museum: result })
+                  if (j === doc.restrictions.length - 1) {
+                    res.json({ museum: result })
+                  }
                 })
               }
             } else {
               res.json({ museum: result })
             }
-          } else {
-            res.json({ museum: result })
           }
         })
       }
