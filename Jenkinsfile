@@ -32,7 +32,10 @@ pipeline {
       environment {
           DATABASE_URL='mongodb+srv://admin:admin@museadb.091dp.mongodb.net/museaDB?retryWrites=true&w=majority'
           TEST_DATABASE_URL='mongodb+srv://admin:admin@museadb.091dp.mongodb.net/testMusea?retryWrites=true&w=majority'
-          MODE='dev'           }
+          MODE='dev'
+          GOOGLE_API_KEY='AIzaSyA1RFJQRHngLKao3l8TU1C2K6KDUHVAUEo'
+          BESTTIME_API_KEY='pri_782a783976c14a55aff28eca14f041a6'           
+          }
       agent {
         docker {
           image 'node:10-alpine'
