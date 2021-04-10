@@ -1,0 +1,41 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.3.0",
+    "title": "Musea API"
+  },
+  "paths": {
+    "/museums": {
+      "get": {
+        "tags": ["Museums endpoints"],
+        "description": "Get museums",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Museums were retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info": {
+      "get": {
+        "tags": ["Museum information"],
+        "description": "Get museums",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Museums were retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

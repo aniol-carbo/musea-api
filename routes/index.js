@@ -93,7 +93,7 @@ router.get('/museums/:museumId/:expositionId', (req, res) => {
         Work.findById(artworkId, (error, work) => {
           if (error) console.log(error)
           result.works.push(work)
-          if (i === result.works.length - 1) res.json({ exposition: result })
+          if (i === doc.works.length - 1) res.json({ exposition: result })
         })
       }
     } else {
