@@ -29,63 +29,50 @@ router.get('/museums', (req, res) => {
   })
 })
 
-router.get('/museums/:museumId', (req, res) => {
+router.get('/museums/:museumId', async (req, res) => {
   const id = req.params.museumId
   // eslint-disable-next-line array-callback-return
-  Museum.findById(id, (err, doc) => {
-    if (err) console.log(err)
-    let expoId, restrictionId
-    const result = {
-      _id: doc._id,
-      name: doc.name,
-      address: doc.address,
-      city: doc.city,
-      country: doc.country,
-      location: doc.location,
-      expositions: [],
-      descriptions: doc.descriptions,
-      image: doc.image,
-      restrictions: []
-    }
-    if (doc.expositions.length > 0) {
-      for (let i = 0; i < doc.expositions.length; i++) {
-        expoId = doc.expositions[i]
-        Exposition.findById(expoId, (erro, exp) => {
-          if (erro) console.log(erro)
-          result.expositions.push(exp)
-          if (i === doc.expositions.length - 1) {
-            if (doc.restrictions.length > 0) {
-              for (let j = 0; j < doc.restrictions.length; j++) {
-                restrictionId = doc.restrictions[j]
-                Restriction.findById(restrictionId, (error, expo) => {
-                  if (error) console.log(error)
-                  result.restrictions.push(expo)
-                  if (j === doc.restrictions.length - 1) {
-                    res.json({ museum: result })
-                  }
-                })
-              }
-            } else {
-              res.json({ museum: result })
-            }
-          }
-        })
-      }
+  try {
+    const doc = await Museum.findById(id)
+    if (!doc) {
+      throw new Error('no document found')
     } else {
+      let expoId, restrictionId
+      const result = {
+        _id: doc._id,
+        name: doc.name,
+        address: doc.address,
+        city: doc.city,
+        country: doc.country,
+        location: doc.location,
+        expositions: [],
+        descriptions: doc.descriptions,
+        image: doc.image,
+        restrictions: []
+      }
+      if (doc.expositions.length > 0) {
+        for (let i = 0; i < doc.expositions.length; i++) {
+          expoId = doc.expositions[i]
+          await Exposition.findById(expoId, (erro, exp) => {
+            if (erro) console.log(erro)
+            result.expositions.push(exp)
+          })
+        }
+      }
       if (doc.restrictions.length > 0) {
         for (let j = 0; j < doc.restrictions.length; j++) {
           restrictionId = doc.restrictions[j]
-          Restriction.findById(restrictionId, (error, expo) => {
+          await Restriction.findById(restrictionId, (error, restr) => {
             if (error) console.log(error)
-            result.restrictions.push(expo)
-            if (j === doc.restrictions.length - 1) res.json({ museum: result })
+            result.restrictions.push(restr)
           })
         }
-      } else {
-        res.json({ museum: result })
       }
+      res.json({ museum: result })
     }
-  })
+  } catch {
+    res.json({ museum: 'There is no museum for such id' })
+  }
 })
 
 router.get('/museums/:museumId/:expositionId', (req, res) => {
