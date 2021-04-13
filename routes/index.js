@@ -21,17 +21,20 @@ const Work = require('../models/artwork')
 const User = require('../models/user')
 const Restriction = require('../models/restriction')
 
-router.get('/museums', (req, res) => {
-  // eslint-disable-next-line array-callback-return
-  Museum.find((err, docs) => {
-    if (err) console.log(err)
+router.get('/museums', async (req, res) => {
+  try {
+    const docs = await Museum.find()
+    if (!docs) {
+      throw new Error('no document found')
+    }
     res.json({ museums: docs })
-  })
+  } catch {
+    res.json({ museums: 'No museums found' })
+  }
 })
 
 router.get('/museums/:museumId', async (req, res) => {
   const id = req.params.museumId
-  // eslint-disable-next-line array-callback-return
   try {
     const doc = await Museum.findById(id)
     if (!doc) {
@@ -75,52 +78,86 @@ router.get('/museums/:museumId', async (req, res) => {
   }
 })
 
-router.get('/museums/:museumId/:expositionId', (req, res) => {
+router.get('/museums/:museumId/:expositionId', async (req, res) => {
   const id = req.params.expositionId
-  // eslint-disable-next-line array-callback-return
-  Exposition.findById(id, (err, doc) => {
-    if (err) console.log(err)
-    let artworkId
-    const result = {
-      _id: doc._id,
-      name: doc.name,
-      room: doc.room,
-      descriptions: doc.descriptions,
-      works: [],
-      image: doc.image
-    }
-    if (doc.works.length > 0) {
-      for (let i = 0; i < doc.works.length; i++) {
-        artworkId = doc.works[i]
-        Work.findById(artworkId, (error, work) => {
-          if (error) console.log(error)
-          result.works.push(work)
-          if (i === doc.works.length - 1) res.json({ exposition: result })
-        })
-      }
+  try {
+    const doc = await Exposition.findById(id)
+    if (!doc) {
+      throw new Error('no document found')
     } else {
+      let artworkId
+      const result = {
+        _id: doc._id,
+        name: doc.name,
+        room: doc.room,
+        descriptions: doc.descriptions,
+        works: [],
+        image: doc.image
+      }
+      if (doc.works.length > 0) {
+        for (let i = 0; i < doc.works.length; i++) {
+          artworkId = doc.works[i]
+          await Work.findById(artworkId, (error, work) => {
+            if (error) console.log(error)
+            result.works.push(work)
+          })
+        }
+      }
       res.json({ exposition: result })
     }
-  })
+  } catch {
+    res.json({ exposition: 'There is no exposition for such id' })
+  }
 })
 
-router.get('/museums/:museumId/:expositionId/:workId', (req, res) => {
+router.get('/museums/:museumId/:expositionId/:workId', async (req, res) => {
   const id = req.params.workId
-  // eslint-disable-next-line array-callback-return
-  Work.findById(id, (err, doc) => {
-    if (err) console.log(err)
+  try {
+    const doc = await Work.findById(id)
+    if (!doc) {
+      throw new Error('no document found')
+    }
     res.json({ work: doc })
-  })
+  } catch {
+    res.json({ work: 'There is no artwork for such id' })
+  }
 })
 
-// GET /users/userName to get the user's info
-router.get('/users/:userId', (req, res) => {
+// GET /users to get all the user's info
+router.get('/users', async (req, res) => {
+  try {
+    const docs = await User.find()
+    if (!docs) {
+      throw new Error('no document found')
+    } else {
+      const result = []
+      for (let i = 0; i < docs.length; i++) {
+        const user = {
+          username: docs[i].userId,
+          fullName: docs[i].name,
+          premium: docs[i].premium
+        }
+        result.push(user)
+      }
+      res.json({ users: result })
+    }
+  } catch {
+    res.json({ users: 'No users found' })
+  }
+})
+
+// GET /users/username to get the user's info
+router.get('/users/:userId', async (req, res) => {
   const id = req.params.userId
-  // eslint-disable-next-line array-callback-return
-  User.findOne({ userId: id }, (err, doc) => {
-    if (err) console.log(err)
+  try {
+    const doc = await User.findOne({ userId: id })
+    if (!doc) {
+      throw new Error('no document found')
+    }
     res.json({ user: doc })
-  })
+  } catch {
+    res.json({ user: 'There is no user for such id' })
+  }
 })
 
 // GET /info with query params name=museumName and city=museumCity
