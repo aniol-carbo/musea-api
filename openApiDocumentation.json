@@ -27,7 +27,7 @@
         }
       }
     },
-    "/museums/": {
+    "/museums/{museumId}": {
       "get": {
         "tags": ["Get museum by id"],
         "description": "Retrieving a museum by the given id",
@@ -41,7 +41,71 @@
         ],
         "responses": {
           "200": {
-            "description": "Museums were retrieved",
+            "description": "The museum was retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/museums/{museumId}/{expositionId}": {
+      "get": {
+        "tags": ["Get exposition by id"],
+        "description": "Retrieving an exposition by the given id",
+        "parameters": [
+          {
+            "name": "museumId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired museum"
+          },
+          {
+            "name": "expositionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired exposition"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The exposition was retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/museums/{museumId}/{expositionId}/{artworkId}": {
+      "get": {
+        "tags": ["Get artworks by id"],
+        "description": "Retrieving an artwork by the given id",
+        "parameters": [
+          {
+            "name": "museumId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired museum"
+          },
+          {
+            "name": "expositionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired exposition"
+          },
+          {
+            "name": "artworkId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired artwork"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The artwork was retrieved",
             "content": {
               "application/json": {
               }
@@ -57,7 +121,46 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Museums were retrieved",
+            "description": "The museum information was retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["Get users"],
+        "description": "Retrieving all the users",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Users were retrieved successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "tags": ["Get user by id"],
+        "description": "Retrieving a user by the given id",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user was retrieved",
             "content": {
               "application/json": {
               }

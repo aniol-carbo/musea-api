@@ -214,6 +214,19 @@ router.post('/museums', (req, res) => {
   })
 })
 
+// POST /users with params username, fullName, bio and profilePic
+router.post('/users', (req, res) => {
+  const username = req.query.username
+  const fullName = req.query.fullName
+  const bio = req.query.bio
+  const profilePic = req.query.profilePic === undefined ? 'https://museaimages1.s3.amazonaws.com/users/unknown.jpg' : req.query.profilePic
+  const user = new User({ _id: ObjectId(), userId: username, name: fullName, bio: bio, favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [] })
+  user.save((e, us) => {
+    if (e) console.log(e)
+    res.send(us)
+  })
+})
+
 // POST /users/userName with params bio=newBio
 router.post('/users/:userId', async (req, res) => {
   const user = req.params.userId
