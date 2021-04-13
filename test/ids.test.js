@@ -55,7 +55,7 @@ describe('Museums', () => {
   describe('/GET/:museumId', () => {
     // eslint-disable-next-line no-undef
     it('it should GET a museum by the given id', (done) => {
-      const museum = new Museum({ _id: ObjectId('6048d3d2eaf9c527ba4de26a'), name: 'MACBA', address: 'Plaça Skaters', city: 'Barcelona', country: 'Spain', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', expositions: ['6048e3baeaf9c527ba4de26d'], restrictions: ['604a4dbeecf47558346496e0'] })
+      const museum = new Museum({ _id: ObjectId('6048d3d2eaf9c527ba4de26a'), name: 'MACBA', address: 'Plaça Skaters', city: 'Barcelona', country: 'Spain', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', expositions: [], restrictions: [] })
       museum.save((e, mus) => {
         if (e) console.log(e)
         chai.request(server)

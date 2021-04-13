@@ -29,7 +29,7 @@ router.get('/museums', async (req, res) => {
     }
     res.json({ museums: docs })
   } catch {
-    res.json({ museums: 'No museums found' })
+    res.send('No museums found')
   }
 })
 
@@ -56,25 +56,37 @@ router.get('/museums/:museumId', async (req, res) => {
       if (doc.expositions.length > 0) {
         for (let i = 0; i < doc.expositions.length; i++) {
           expoId = doc.expositions[i]
-          await Exposition.findById(expoId, (erro, exp) => {
-            if (erro) console.log(erro)
-            result.expositions.push(exp)
-          })
+          try {
+            const exp = await Exposition.findById(expoId)
+            if (!exp) {
+              throw new Error('no document found')
+            } else {
+              result.expositions.push(exp)
+            }
+          } catch {
+            res.send('This museum has an invalid exposition')
+          }
         }
       }
       if (doc.restrictions.length > 0) {
         for (let j = 0; j < doc.restrictions.length; j++) {
           restrictionId = doc.restrictions[j]
-          await Restriction.findById(restrictionId, (error, restr) => {
-            if (error) console.log(error)
-            result.restrictions.push(restr)
-          })
+          try {
+            const restr = await Restriction.findById(restrictionId)
+            if (!restr) {
+              throw new Error('no document found')
+            } else {
+              result.restrictions.push(restr)
+            }
+          } catch {
+            res.send('This museum has an invalid restriction')
+          }
         }
       }
       res.json({ museum: result })
     }
   } catch {
-    res.json({ museum: 'There is no museum for such id' })
+    res.send('There is no museum for such id')
   }
 })
 
@@ -97,16 +109,22 @@ router.get('/museums/:museumId/:expositionId', async (req, res) => {
       if (doc.works.length > 0) {
         for (let i = 0; i < doc.works.length; i++) {
           artworkId = doc.works[i]
-          await Work.findById(artworkId, (error, work) => {
-            if (error) console.log(error)
-            result.works.push(work)
-          })
+          try {
+            const work = await Work.findById(artworkId)
+            if (!work) {
+              throw new Error('no document found')
+            } else {
+              result.works.push(work)
+            }
+          } catch {
+            res.send('This exposition has an invalid artwork')
+          }
         }
       }
       res.json({ exposition: result })
     }
   } catch {
-    res.json({ exposition: 'There is no exposition for such id' })
+    res.send('There is no exposition for such id')
   }
 })
 
@@ -119,7 +137,7 @@ router.get('/museums/:museumId/:expositionId/:workId', async (req, res) => {
     }
     res.json({ work: doc })
   } catch {
-    res.json({ work: 'There is no artwork for such id' })
+    res.send('There is no artwork for such id')
   }
 })
 
@@ -142,7 +160,7 @@ router.get('/users', async (req, res) => {
       res.json({ users: result })
     }
   } catch {
-    res.json({ users: 'No users found' })
+    res.send('No users found')
   }
 })
 
@@ -156,7 +174,7 @@ router.get('/users/:userId', async (req, res) => {
     }
     res.json({ user: doc })
   } catch {
-    res.json({ user: 'There is no user for such id' })
+    res.send('There is no user for such id')
   }
 })
 

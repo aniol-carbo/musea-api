@@ -118,7 +118,20 @@
       "get": {
         "tags": ["Museum information"],
         "description": "Get museums",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "description": "Name of the desired museum"
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "required": true,
+            "description": "City of the desired exposition"
+          }
+        ],
         "responses": {
           "200": {
             "description": "The museum information was retrieved",
