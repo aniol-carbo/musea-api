@@ -18,7 +18,7 @@ app.set('layout', 'layouts/layout')
 app.use(expressLayouts)
 app.use(express.static('public'))
 app.use('/', indexRouter)
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocumentation))
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDocumentation))
 
 app.listen(process.env.PORT || 3000)
 
