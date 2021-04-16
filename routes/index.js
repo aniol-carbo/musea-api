@@ -29,7 +29,7 @@ router.get('/museums', async (req, res) => {
     }
     res.json({ museums: docs })
   } catch {
-    res.send('No museums found')
+    res.status(404).send('No museums found')
   }
 })
 
@@ -64,7 +64,7 @@ router.get('/museums/:museumId', async (req, res) => {
               result.expositions.push(exp)
             }
           } catch {
-            res.send('This museum has an invalid exposition')
+            res.status(404).send('This museum has an invalid exposition')
           }
         }
       }
@@ -79,14 +79,14 @@ router.get('/museums/:museumId', async (req, res) => {
               result.restrictions.push(restr)
             }
           } catch {
-            res.send('This museum has an invalid restriction')
+            res.status(404).send('This museum has an invalid restriction')
           }
         }
       }
       res.json({ museum: result })
     }
   } catch {
-    res.send('There is no museum for such id')
+    res.status(404).send('There is no museum for such id')
   }
 })
 
@@ -117,14 +117,14 @@ router.get('/museums/:museumId/:expositionId', async (req, res) => {
               result.works.push(work)
             }
           } catch {
-            res.send('This exposition has an invalid artwork')
+            res.status(404).send('This exposition has an invalid artwork')
           }
         }
       }
       res.json({ exposition: result })
     }
   } catch {
-    res.send('There is no exposition for such id')
+    res.status(404).send('There is no exposition for such id')
   }
 })
 
@@ -137,7 +137,7 @@ router.get('/museums/:museumId/:expositionId/:workId', async (req, res) => {
     }
     res.json({ work: doc })
   } catch {
-    res.send('There is no artwork for such id')
+    res.status(404).send('There is no artwork for such id')
   }
 })
 
@@ -160,7 +160,7 @@ router.get('/users', async (req, res) => {
       res.json({ users: result })
     }
   } catch {
-    res.send('No users found')
+    res.status(404).send('No users found')
   }
 })
 
@@ -174,7 +174,7 @@ router.get('/users/:userId', async (req, res) => {
     }
     res.json({ user: doc })
   } catch {
-    res.send('There is no user for such id')
+    res.status(404).send('There is no user for such id')
   }
 })
 
@@ -209,7 +209,7 @@ router.get('/info', async (req, res, next) => {
     }
     res.json({ info: { name: fullName, horari: horari, isOpen: isOpen, afluence: afluenceInfo } })
   } catch (err) {
-    next(err)
+    res.status(500).send('External API server error')
   }
 })
 
@@ -230,6 +230,50 @@ router.post('/museums', (req, res) => {
     console.log(e)
     res.send(mus)
   })
+})
+
+router.post('/museums/:museumId', async (req, res) => {
+  const museum = req.params.museumId
+  const name = req.query.name
+  const room = req.query.room
+  const descriptions = {
+    ca: req.query.ca,
+    es: req.query.es,
+    en: req.query.en
+  }
+
+  // creating the new expo
+  const exposition = new Exposition({ _id: ObjectId(), name: name, room: room, descriptions: descriptions, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+  const exp = await exposition.save()
+
+  // get the museum expos array
+  let expositions = []
+  try {
+    const doc = await Museum.findById(museum)
+    if (!doc) {
+      throw new Error('no document found')
+    } else {
+      expositions = doc.expositions
+      const expoId = new ObjectId(exp.id)
+      expositions.push(expoId)
+    }
+  } catch {
+    res.stuatus(404).send('There is no museum for such id')
+  }
+
+  // updating the museum (add the expo to its expos array)
+  try {
+    const updated = await Museum.updateOne({ _id: museum }, {
+      expositions: expositions
+    })
+    if (!updated) {
+      throw new Error('error when updating the document')
+    } else {
+      res.redirect('/museums/' + museum)
+    }
+  } catch {
+    res.status(500).send('Could not update the museum with the new exposition')
+  }
 })
 
 // POST /users with params username, fullName, bio and profilePic

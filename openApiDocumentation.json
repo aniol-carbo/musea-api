@@ -23,6 +23,13 @@
               "application/json": {
               }
             }
+          },
+          "404": {
+            "description": "No museums found",
+            "content": {
+              "application/json": {
+              }
+            }
           }
         }
       }
@@ -42,6 +49,13 @@
         "responses": {
           "200": {
             "description": "The museum was retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no museum for such id",
             "content": {
               "application/json": {
               }
@@ -71,6 +85,13 @@
         "responses": {
           "200": {
             "description": "The exposition was retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no exposition for such id",
             "content": {
               "application/json": {
               }
@@ -110,6 +131,13 @@
               "application/json": {
               }
             }
+          },
+          "404": {
+            "description": "There is no exposition for such id",
+            "content": {
+              "application/json": {
+              }
+            }
           }
         }
       }
@@ -139,6 +167,13 @@
               "application/json": {
               }
             }
+          },
+          "500": {
+            "description": "External API server error",
+            "content": {
+              "application/json": {
+              }
+            }
           }
         }
       }
@@ -151,6 +186,13 @@
         "responses": {
           "200": {
             "description": "Users were retrieved successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "No users found",
             "content": {
               "application/json": {
               }
@@ -174,6 +216,13 @@
         "responses": {
           "200": {
             "description": "The user was retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
             "content": {
               "application/json": {
               }
