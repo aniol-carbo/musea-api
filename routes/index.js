@@ -341,9 +341,35 @@ router.post('/users/:userId/likes', async (req, res) => {
     } else {
       likes.push(artwork)
     }
-    console.log(likes)
     await User.updateOne({ userId: user }, {
       likes: likes
+    })
+    res.redirect('/users/' + user)
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
+})
+
+// POST /users/userName/favourites with params museum=museumId
+router.post('/users/:userId/favourites', async (req, res) => {
+  const user = req.params.userId
+  const museum = ObjectId(req.query.museum)
+
+  let favourites = []
+  try {
+    const doc = await User.findOne({ userId: user }, 'favourites')
+    favourites = doc.favourites
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    if (favourites.includes(museum)) {
+      const index = favourites.indexOf(museum)
+      favourites.splice(index, 1)
+    } else {
+      favourites.push(museum)
+    }
+    await User.updateOne({ userId: user }, {
+      favourites: favourites
     })
     res.redirect('/users/' + user)
   } catch {
