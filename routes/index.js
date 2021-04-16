@@ -187,10 +187,10 @@ router.get('/users/:userId/likes', async (req, res) => {
       throw new Error('no document found')
     } else {
       const result = []
-      for (let i = 0; i < doc.likes.length; i++) {
-        const artwork = await Work.findOne({ _id: doc.likes[i] }, 'image')
+      for (const elem of doc.likes) {
+        const artwork = await Work.findOne({ _id: elem }, 'image')
         const obj = {
-          artworkId: doc.likes[i],
+          artworkId: elem,
           image: artwork.image
         }
         result.push(obj)
@@ -278,7 +278,7 @@ router.post('/museums/:museumId', async (req, res) => {
       throw new Error('no document found')
     } else {
       expositions = doc.expositions
-      const expoId = new ObjectId(exp.id)
+      const expoId = ObjectId(exp.id)
       expositions.push(expoId)
     }
   } catch {
