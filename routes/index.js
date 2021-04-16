@@ -202,6 +202,30 @@ router.get('/users/:userId/likes', async (req, res) => {
   }
 })
 
+// GET /users/username/favourites to get all liked museums by the user
+router.get('/users/:userId/favourites', async (req, res) => {
+  const id = req.params.userId
+  try {
+    const doc = await User.findOne({ userId: id }, 'favourites')
+    if (!doc) {
+      throw new Error('no document found')
+    } else {
+      const result = []
+      for (const elem of doc.favourites) {
+        const museum = await Museum.findOne({ _id: elem }, 'image')
+        const obj = {
+          museumId: elem,
+          image: museum.image
+        }
+        result.push(obj)
+      }
+      res.json({ favourites: result })
+    }
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
+})
+
 // GET /info with query params name=museumName and city=museumCity
 router.get('/info', async (req, res, next) => {
   try {
