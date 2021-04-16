@@ -179,4 +179,54 @@ describe('Museums', () => {
       })
     })
   })
+
+  // eslint-disable-next-line no-undef
+  describe('/GET/users/:userId/likes ', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET the liked artworks by the user', (done) => {
+      const artwork = new Work({ _id: ObjectId(), title: 'Grito', author: 'Munch', score: 9.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      artwork.save((e, a) => {
+        if (e) console.log(e)
+        const user = new User({ _id: ObjectId(), userId: 'user1', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: ['6048dd75eaf9c527ba4de26c'], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: ['6048d3d2eaf9c527ba4de26b'], likes: [a.id] })
+        user.save((err, u) => {
+          if (err) console.log(e)
+          chai.request(server)
+            .get('/users/' + u.userId + '/likes')
+          //   .send(museum)
+            .end((error, res) => {
+              if (error) console.log(error)
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.likes.should.be.a('array')
+              done()
+            })
+        })
+      })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/GET/users/:userId/favourites ', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET the saved museums by the user', (done) => {
+      const museum = new Museum({ _id: ObjectId(), name: 'Picasso', address: 'Pablo Picasso', city: 'BCN', country: 'France', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, expositions: ['6048e3baeaf9c527ba4de26d'], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      museum.save((e, m) => {
+        if (e) console.log(e)
+        const user = new User({ _id: ObjectId(), userId: 'user2', name: 'Juan', bio: 'Me encanta Da Vinci', favourites: [m.id], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: ['6048d3d2eaf9c527ba4de26b'], likes: ['6048dd75eaf9c527ba4de26c'] })
+        user.save((err, u) => {
+          if (err) console.log(e)
+          chai.request(server)
+            .get('/users/' + u.userId + '/favourites')
+          //   .send(museum)
+            .end((error, res) => {
+              if (error) console.log(error)
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.favourites.should.be.a('array')
+              done()
+            })
+        })
+      })
+    })
+  })
 })
