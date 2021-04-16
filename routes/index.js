@@ -40,7 +40,6 @@ router.get('/museums/:museumId', async (req, res) => {
     if (!doc) {
       throw new Error('no document found')
     } else {
-      let expoId, restrictionId
       const result = {
         _id: doc._id,
         name: doc.name,
@@ -54,8 +53,7 @@ router.get('/museums/:museumId', async (req, res) => {
         restrictions: []
       }
       if (doc.expositions.length > 0) {
-        for (let i = 0; i < doc.expositions.length; i++) {
-          expoId = doc.expositions[i]
+        for (const expoId of doc.expositions) {
           try {
             const exp = await Exposition.findById(expoId)
             if (!exp) {
@@ -69,8 +67,7 @@ router.get('/museums/:museumId', async (req, res) => {
         }
       }
       if (doc.restrictions.length > 0) {
-        for (let j = 0; j < doc.restrictions.length; j++) {
-          restrictionId = doc.restrictions[j]
+        for (const restrictionId of doc.restrictions) {
           try {
             const restr = await Restriction.findById(restrictionId)
             if (!restr) {
@@ -107,8 +104,8 @@ router.get('/museums/:museumId/:expositionId', async (req, res) => {
         image: doc.image
       }
       if (doc.works.length > 0) {
-        for (let i = 0; i < doc.works.length; i++) {
-          artworkId = doc.works[i]
+        for (const elem of doc.works) {
+          artworkId = elem
           try {
             const work = await Work.findById(artworkId)
             if (!work) {
@@ -149,11 +146,11 @@ router.get('/users', async (req, res) => {
       throw new Error('no document found')
     } else {
       const result = []
-      for (let i = 0; i < docs.length; i++) {
+      for (const elem of docs) {
         const user = {
-          username: docs[i].userId,
-          fullName: docs[i].name,
-          premium: docs[i].premium
+          username: elem.userId,
+          fullName: elem.name,
+          premium: elem.premium
         }
         result.push(user)
       }
@@ -246,9 +243,9 @@ router.get('/info', async (req, res, next) => {
     )
     const days = afluence.data.analysis
     const afluenceInfo = []
-    for (const day in days) {
-      const dayName = days[day].day_info.day_text
-      const hours = days[day].day_raw
+    for (const day of days) {
+      const dayName = day.day_info.day_text
+      const hours = day.day_raw
       const fullDay = {
         dayName: dayName,
         hours: hours
