@@ -178,6 +178,30 @@ router.get('/users/:userId', async (req, res) => {
   }
 })
 
+// GET /users/username/likes to get all liked artworks by the user
+router.get('/users/:userId/likes', async (req, res) => {
+  const id = req.params.userId
+  try {
+    const doc = await User.findOne({ userId: id }, 'likes')
+    if (!doc) {
+      throw new Error('no document found')
+    } else {
+      const result = []
+      for (let i = 0; i < doc.likes.length; i++) {
+        const artwork = await Work.findOne({ _id: doc.likes[i] }, 'image')
+        const obj = {
+          artworkId: doc.likes[i],
+          image: artwork.image
+        }
+        result.push(obj)
+      }
+      res.json({ likes: result })
+    }
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
+})
+
 // GET /info with query params name=museumName and city=museumCity
 router.get('/info', async (req, res, next) => {
   try {
@@ -297,6 +321,34 @@ router.post('/users/:userId', async (req, res) => {
     bio: bio
   })
   res.json(updated)
+})
+
+// POST /users/userName/likes with params artwork=artworkId
+router.post('/users/:userId/likes', async (req, res) => {
+  const user = req.params.userId
+  const artwork = ObjectId(req.query.artwork)
+
+  let likes = []
+  try {
+    const doc = await User.findOne({ userId: user }, 'likes')
+    likes = doc.likes
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    if (likes.includes(artwork)) {
+      const index = likes.indexOf(artwork)
+      likes.splice(index, 1)
+    } else {
+      likes.push(artwork)
+    }
+    console.log(likes)
+    await User.updateOne({ userId: user }, {
+      likes: likes
+    })
+    res.redirect('/users/' + user)
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
 })
 
 module.exports = router

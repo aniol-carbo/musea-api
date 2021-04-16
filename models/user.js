@@ -12,7 +12,8 @@ const UserSchema = new Schema({
   points: Number,
   profilePic: String,
   premium: Boolean,
-  visited: Array
+  visited: Array,
+  likes: Array
 })
 
 module.exports = mongoose.model('users', UserSchema)
