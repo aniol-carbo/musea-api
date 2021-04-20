@@ -324,10 +324,10 @@ router.post('/museums/:museumId', async (req, res) => {
 router.post('/museums/:museumId/:expositionId', async (req, res) => {
   const museum = req.params.museumId
   const exposition = req.params.expositionId
-  const title = req.query.name
-  const author = req.query.room
-  const score = req.query.name
-  const type = req.query.room
+  const title = req.query.title
+  const author = req.query.author
+  const score = req.query.score
+  const type = req.query.type
   const descriptions = {
     ca: req.query.ca,
     es: req.query.es,
