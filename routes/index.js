@@ -321,6 +321,61 @@ router.post('/museums/:museumId', async (req, res) => {
   }
 })
 
+router.post('/museums/:museumId/:expositionId', async (req, res) => {
+  const museum = req.params.museumId
+  const exposition = req.params.expositionId
+  const title = req.query.name
+  const author = req.query.room
+  const score = req.query.name
+  const type = req.query.room
+  const descriptions = {
+    ca: req.query.ca,
+    es: req.query.es,
+    en: req.query.en
+  }
+
+  // creating the new artwork
+  const artwork = new Work({ _id: ObjectId(), title: title, author: author, score: score, type: type, descriptions: descriptions, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+  let work
+  try {
+    work = await artwork.save()
+    if (!work) {
+      throw new Error('no document found')
+    }
+  } catch {
+    res.status(500).send('Could not save the new artwork')
+  }
+
+  // get the expo's works array
+  let works = []
+  try {
+    const doc = await Exposition.findById(exposition)
+    if (!doc) {
+      throw new Error('no document found')
+    } else {
+      if (doc.works != null) works = doc.works
+      const workId = ObjectId(work.id)
+      works.push(workId)
+    }
+  } catch {
+    res.status(404).send('There is no expo for such id')
+  }
+
+  // updating the museum (add the expo to its expos array)
+  try {
+    const updated = await Exposition.updateOne({ _id: exposition }, {
+      works: works
+    })
+    if (!updated) {
+      throw new Error('error when updating the document')
+    } else {
+      res.redirect('/museums/' + museum + '/' + exposition)
+    }
+  } catch {
+    res.status(500).send('Could not update the exposition with the new artwork')
+  }
+})
+
 // POST /users with params username, fullName, bio and profilePic
 router.post('/users', (req, res) => {
   const username = req.query.username
