@@ -441,7 +441,11 @@ router.post('/users/:userId/favourites', async (req, res) => {
     if (!doc) {
       throw new Error('no document found')
     }
-    if (favourites.includes(museum)) {
+    let found = false
+    for (const mus of favourites) {
+      if (museum.equals(mus)) found = true
+    }
+    if (found) {
       const index = favourites.indexOf(museum)
       favourites.splice(index, 1)
     } else {
