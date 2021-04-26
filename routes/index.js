@@ -403,7 +403,6 @@ router.post('/users/:userId', async (req, res) => {
 router.post('/users/:userId/likes', async (req, res) => {
   const user = req.params.userId
   const artwork = ObjectId(req.query.artwork)
-
   let likes = []
   try {
     const doc = await User.findOne({ userId: user }, 'likes')
@@ -411,7 +410,6 @@ router.post('/users/:userId/likes', async (req, res) => {
     if (!doc) {
       throw new Error('no document found')
     }
-    console.log('abans', likes)
     let found = false
     for (const aw of likes) {
       if (aw.equals(artwork)) found = true
@@ -422,10 +420,9 @@ router.post('/users/:userId/likes', async (req, res) => {
     } else {
       likes.push(artwork)
     }
-    console.log('despres', likes)
-    // await User.updateOne({ userId: user }, {
-    //   likes: likes
-    // })
+    await User.updateOne({ userId: user }, {
+      likes: likes
+    })
     res.redirect('/users/' + user)
   } catch {
     res.status(404).send('There is no user for such id')
