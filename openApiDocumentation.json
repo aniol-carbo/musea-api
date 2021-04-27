@@ -13,7 +13,8 @@
   "paths": {
     "/museums": {
       "get": {
-        "tags": ["Get museums"],
+        "tags": ["Museums"],
+        "summary": "Get all museums",
         "description": "Retrieving all the museums",
         "parameters": [],
         "responses": {
@@ -32,11 +33,70 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": ["Museums"],
+        "summary": "Create a new museum",
+        "description": "Creating a new museum with the given info",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "description": "Name of the new museum"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "required": true,
+            "description": "Address of the new museum"
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "required": true,
+            "description": "City of the new museum"
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": true,
+            "description": "Country of the new museum"
+          },
+          {
+            "name": "ca",
+            "in": "query",
+            "required": true,
+            "description": "Catalan description of the new museum"
+          },
+          {
+            "name": "es",
+            "in": "query",
+            "required": true,
+            "description": "Spanish description of the new museum"
+          },
+          {
+            "name": "en",
+            "in": "query",
+            "required": true,
+            "description": "English description of the new museum"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The museum was created successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
       }
     },
     "/museums/{museumId}": {
       "get": {
-        "tags": ["Get museum by id"],
+        "tags": ["Museums"],
+        "summary": "Get museum by id",
         "description": "Retrieving a museum by the given id",
         "parameters": [
           {
@@ -62,11 +122,100 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": ["Museums"],
+        "summary": "Create a new exposition",
+        "description": "Creating a new exposition with the given info",
+        "parameters": [
+          {
+            "name": "museumId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the hosting museum"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "description": "Name of the new exposition"
+          },
+          {
+            "name": "room",
+            "in": "query",
+            "required": true,
+            "description": "Room of the new exposition"
+          },
+          {
+            "name": "ca",
+            "in": "query",
+            "required": true,
+            "description": "Catalan description of the new exposition"
+          },
+          {
+            "name": "es",
+            "in": "query",
+            "required": true,
+            "description": "Spanish description of the new exposition"
+          },
+          {
+            "name": "en",
+            "in": "query",
+            "required": true,
+            "description": "English description of the new exposition"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The exposition was created successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "500": {
+            "description": "Could not update the museum with the new exposition",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Museums"],
+        "summary": "Delete museum",
+        "description": "Deleting a museum by the given id",
+        "parameters": [
+          {
+            "name": "museumId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired museum"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The museum was deleted",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no museum for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
       }
     },
     "/museums/{museumId}/{expositionId}": {
       "get": {
-        "tags": ["Get exposition by id"],
+        "tags": ["Museums"],
+        "summary": "Get exposition by id",
         "description": "Retrieving an exposition by the given id",
         "parameters": [
           {
@@ -98,11 +247,124 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": ["Museums"],
+        "summary": "Create a new artwork",
+        "description": "Creating a new artwork with the given info",
+        "parameters": [
+          {
+            "name": "museumId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the hosting museum"
+          },
+          {
+            "name": "expositionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the hosting exposition"
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "required": true,
+            "description": "Title of the new artwork"
+          },
+          {
+            "name": "author",
+            "in": "query",
+            "required": true,
+            "description": "Room of the new artwork"
+          },
+          {
+            "name": "score",
+            "in": "query",
+            "required": true,
+            "description": "Score of the new artwork"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "description": "Type of the new artwork"
+          },
+          {
+            "name": "ca",
+            "in": "query",
+            "required": true,
+            "description": "Catalan description of the new artwork"
+          },
+          {
+            "name": "es",
+            "in": "query",
+            "required": true,
+            "description": "Spanish description of the new artwork"
+          },
+          {
+            "name": "en",
+            "in": "query",
+            "required": true,
+            "description": "English description of the new artwork"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The artwork was created successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "500": {
+            "description": "Could not update the exposition with the new artwork",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Museums"],
+        "summary": "Delete exposition",
+        "description": "Deleting an exposition by the given id",
+        "parameters": [
+          {
+            "name": "museumId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired museum"
+          },
+          {
+            "name": "expositionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired exposition"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The exposition was deleted",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no exposition for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
       }
     },
     "/museums/{museumId}/{expositionId}/{artworkId}": {
       "get": {
-        "tags": ["Get artworks by id"],
+        "tags": ["Museums"],
+        "summary": "Get artwork by id",
         "description": "Retrieving an artwork by the given id",
         "parameters": [
           {
@@ -140,12 +402,54 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": ["Museums"],
+        "summary": "Delete artwork",
+        "description": "Deleting an artwork by the given id",
+        "parameters": [
+          {
+            "name": "museumId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired museum"
+          },
+          {
+            "name": "expositionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired exposition"
+          },
+          {
+            "name": "artworkId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired artwork"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The artwork was deleted",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no artwork for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
       }
     },
     "/info": {
       "get": {
-        "tags": ["Museum information"],
-        "description": "Get museums",
+        "tags": ["Museums"],
+        "summary": "Get museum information",
+        "description": "Retrieving the museum's info: opening hours, restrictions, etc.",
         "parameters": [
           {
             "name": "name",
@@ -180,7 +484,8 @@
     },
     "/users": {
       "get": {
-        "tags": ["Get users"],
+        "tags": ["Users"],
+        "summary": "Get all users",
         "description": "Retrieving all the users",
         "parameters": [],
         "responses": {
@@ -199,11 +504,47 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create a new user",
+        "description": "Creating a new user with the given info",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "description": "Username of the new user"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "description": "Email of the new user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user was created successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "500": {
+            "description": "Could not create the new user",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
       }
     },
     "/users/{userId}": {
       "get": {
-        "tags": ["Get user by id"],
+        "tags": ["Users"],
+        "summary": "Get user by id",
         "description": "Retrieving a user by the given id",
         "parameters": [
           {
@@ -216,6 +557,245 @@
         "responses": {
           "200": {
             "description": "The user was retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Users"],
+        "summary": "Edit the user info",
+        "description": "Editing the user's name and bio",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired user"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "description": "New name of the user"
+          },
+          {
+            "name": "bio",
+            "in": "query",
+            "required": true,
+            "description": "New bio of the user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user was updated",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/likes": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get likes",
+        "description": "Retrieving the user's liked artworks",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user's likes were retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Like/dislike an artwork",
+        "description": "Liking or disliking an artwork from the given user",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Username of the user"
+          },
+          {
+            "name": "artwork",
+            "in": "query",
+            "required": true,
+            "description": "Id of the corresponding artwork"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The artwork was liked/disliked successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/favourites": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get favourite museums",
+        "description": "Retrieving the user's favourite museums",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user's favourite museums were retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Add/remove favourite museum",
+        "description": "Add or remove a favourite museum from the given user",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Username of the user"
+          },
+          {
+            "name": "museum",
+            "in": "query",
+            "required": true,
+            "description": "Id of the corresponding museum"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The museum was added/removed successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/visited": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get visited museums",
+        "description": "Retrieving the museums that the user has visited",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the desired user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The visited museums were retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Add/remove visited museum",
+        "description": "Add or remove a visited museum from the given user",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Username of the user"
+          },
+          {
+            "name": "museum",
+            "in": "query",
+            "required": true,
+            "description": "Id of the corresponding museum"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The museum was added/removed successfully",
             "content": {
               "application/json": {
               }

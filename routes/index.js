@@ -223,6 +223,30 @@ router.get('/users/:userId/favourites', async (req, res) => {
   }
 })
 
+// GET /users/username/visited to get all visited museums by the user
+router.get('/users/:userId/visited', async (req, res) => {
+  const id = req.params.userId
+  try {
+    const doc = await User.findOne({ userId: id }, 'visited')
+    if (!doc) {
+      throw new Error('no document found')
+    } else {
+      const result = []
+      for (const elem of doc.visited) {
+        const museum = await Museum.findOne({ _id: elem }, 'image')
+        const obj = {
+          museumId: elem,
+          image: museum.image
+        }
+        result.push(obj)
+      }
+      res.json({ visited: result })
+    }
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
+})
+
 // GET /info with query params name=museumName and city=museumCity
 router.get('/info', async (req, res, next) => {
   try {
@@ -380,7 +404,7 @@ router.post('/museums/:museumId/:expositionId', async (req, res) => {
 router.post('/users', (req, res) => {
   const username = req.query.username
   const email = req.query.email
-  const profilePic = req.query.profilePic === undefined ? 'https://museaimages1.s3.amazonaws.com/users/unknown.jpg' : req.query.profilePic
+  const profilePic = 'https://museaimages1.s3.amazonaws.com/users/unknown.jpg'
   const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [] })
   user.save((e, us) => {
     if (e) console.log(e)
@@ -448,6 +472,33 @@ router.post('/users/:userId/favourites', async (req, res) => {
   }
 })
 
+// POST /users/userName/visited with params museum=museumId
+router.post('/users/:userId/visited', async (req, res) => {
+  const user = req.params.userId
+  const museum = ObjectId(req.query.museum)
+  let visited = []
+  try {
+    const doc = await User.findOne({ userId: user }, 'visited')
+    visited = doc.visited
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    let found = false
+    for (const mus of visited) {
+      if (museum.equals(mus)) found = true
+    }
+    if (!found) {
+      visited.push(museum)
+    }
+    await User.updateOne({ userId: user }, {
+      visited: visited
+    })
+    res.redirect('/users/' + user)
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
+})
+
 // ----------------- DELETE -------------------- //
 
 router.delete('/museums/:museumId', async (req, res) => {
@@ -465,13 +516,30 @@ router.delete('/museums/:museumId', async (req, res) => {
 })
 
 router.delete('/museums/:museumId/:expositionId', async (req, res) => {
+  const museum = req.params.museumId
   const exposition = req.params.expositionId
   try {
     const deleted = await Exposition.deleteOne({ _id: exposition })
     if (!deleted) {
       throw new Error('no document found')
     } else {
-      res.redirect('/museums')
+      res.redirect('/museums/' + museum)
+    }
+  } catch {
+    res.status(404).send('There is no museum for such id')
+  }
+})
+
+router.delete('/museums/:museumId/:expositionId/:artworkId', async (req, res) => {
+  const museum = req.params.museumId
+  const exposition = req.params.expositionId
+  const artwork = req.params.artworkId
+  try {
+    const deleted = await Work.deleteOne({ _id: artwork })
+    if (!deleted) {
+      throw new Error('no document found')
+    } else {
+      res.redirect('/museums/' + museum + '/' + exposition)
     }
   } catch {
     res.status(404).send('There is no museum for such id')
