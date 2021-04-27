@@ -460,4 +460,21 @@ router.post('/users/:userId/favourites', async (req, res) => {
   }
 })
 
+// ----------------- DELETE -------------------- //
+
+router.delete('/museums/:museumId', async (req, res) => {
+  const id = req.params.museumId
+
+  try {
+    const deleted = await Museum.deleteOne({ _id: id })
+    if (!deleted) {
+      throw new Error('no document found')
+    } else {
+      res.redirect('/museums')
+    }
+  } catch {
+    res.status(404).send('There is no museum for such id')
+  }
+})
+
 module.exports = router
