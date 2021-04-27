@@ -376,27 +376,16 @@ router.post('/museums/:museumId/:expositionId', async (req, res) => {
   }
 })
 
-// POST /users with params username, fullName, bio and profilePic
+// POST /users with params username, email and profilePic
 router.post('/users', (req, res) => {
   const username = req.query.username
-  const fullName = req.query.fullName
-  const bio = req.query.bio
+  const email = req.query.email
   const profilePic = req.query.profilePic === undefined ? 'https://museaimages1.s3.amazonaws.com/users/unknown.jpg' : req.query.profilePic
-  const user = new User({ _id: ObjectId(), userId: username, name: fullName, bio: bio, favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [] })
+  const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [] })
   user.save((e, us) => {
     if (e) console.log(e)
     res.send(us)
   })
-})
-
-// POST /users/userName with params bio=newBio
-router.post('/users/:userId', async (req, res) => {
-  const user = req.params.userId
-  const bio = req.query.bio
-  const updated = await User.updateOne({ userId: user }, {
-    bio: bio
-  })
-  res.json(updated)
 })
 
 // POST /users/userName/likes with params artwork=artworkId
@@ -433,7 +422,6 @@ router.post('/users/:userId/likes', async (req, res) => {
 router.post('/users/:userId/favourites', async (req, res) => {
   const user = req.params.userId
   const museum = ObjectId(req.query.museum)
-
   let favourites = []
   try {
     const doc = await User.findOne({ userId: user }, 'favourites')
@@ -463,10 +451,9 @@ router.post('/users/:userId/favourites', async (req, res) => {
 // ----------------- DELETE -------------------- //
 
 router.delete('/museums/:museumId', async (req, res) => {
-  const id = req.params.museumId
-
+  const museum = req.params.museumId
   try {
-    const deleted = await Museum.deleteOne({ _id: id })
+    const deleted = await Museum.deleteOne({ _id: museum })
     if (!deleted) {
       throw new Error('no document found')
     } else {
@@ -474,6 +461,42 @@ router.delete('/museums/:museumId', async (req, res) => {
     }
   } catch {
     res.status(404).send('There is no museum for such id')
+  }
+})
+
+router.delete('/museums/:museumId/:expositionId', async (req, res) => {
+  const exposition = req.params.expositionId
+  try {
+    const deleted = await Exposition.deleteOne({ _id: exposition })
+    if (!deleted) {
+      throw new Error('no document found')
+    } else {
+      res.redirect('/museums')
+    }
+  } catch {
+    res.status(404).send('There is no museum for such id')
+  }
+})
+
+// ----------------- PUT -------------------- //
+
+// PUT /users/userName with params bio=newBio & name=newName
+router.put('/users/:userId', async (req, res) => {
+  const user = req.params.userId
+  const name = req.query.name
+  const bio = req.query.bio
+  try {
+    const updated = await User.updateOne({ userId: user }, {
+      name: name,
+      bio: bio
+    })
+    if (!updated) {
+      throw new Error('no document found')
+    } else {
+      res.redirect('/users/' + user)
+    }
+  } catch {
+    res.status(404).send('There is no user for such id')
   }
 })
 
