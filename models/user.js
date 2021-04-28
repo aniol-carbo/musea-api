@@ -7,6 +7,7 @@ const UserSchema = new Schema({
   _id: ObjectId,
   userId: String,
   name: String,
+  email: String,
   bio: String,
   favourites: Array,
   points: Number,
