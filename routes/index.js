@@ -523,7 +523,22 @@ router.delete('/museums/:museumId/:expositionId', async (req, res) => {
     if (!deleted) {
       throw new Error('no document found')
     } else {
-      res.redirect('/museums/' + museum)
+      const doc = await Museum.findById({ _id: museum })
+      const expositions = doc.expositions
+      if (!doc) {
+        throw new Error('no document found')
+      } else {
+        const index = expositions.indexOf(exposition)
+        if (index !== -1) expositions.splice(index, 1)
+        const updated = await Museum.updateOne({ _id: museum }, {
+          expositions: expositions
+        })
+        if (!updated) {
+          throw new Error('no document found')
+        } else {
+          res.redirect('/museums/' + museum)
+        }
+      }
     }
   } catch {
     res.status(404).send('There is no museum for such id')
@@ -539,7 +554,22 @@ router.delete('/museums/:museumId/:expositionId/:artworkId', async (req, res) =>
     if (!deleted) {
       throw new Error('no document found')
     } else {
-      res.redirect('/museums/' + museum + '/' + exposition)
+      const doc = await Exposition.findById({ _id: exposition })
+      const works = doc.works
+      if (!doc) {
+        throw new Error('no document found')
+      } else {
+        const index = works.indexOf(artwork)
+        if (index !== -1) works.splice(index, 1)
+        const updated = await Exposition.updateOne({ _id: exposition }, {
+          works: works
+        })
+        if (!updated) {
+          throw new Error('no document found')
+        } else {
+          res.redirect('/museums/' + museum + '/' + exposition)
+        }
+      }
     }
   } catch {
     res.status(404).send('There is no museum for such id')
