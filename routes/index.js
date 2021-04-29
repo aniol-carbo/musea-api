@@ -20,6 +20,7 @@ const Exposition = require('../models/exposition')
 const Work = require('../models/artwork')
 const User = require('../models/user')
 const Restriction = require('../models/restriction')
+const Quizz = require('../models/quizz')
 
 router.get('/museums', async (req, res) => {
   try {
@@ -279,6 +280,18 @@ router.get('/info', async (req, res, next) => {
     res.json({ info: { name: fullName, horari: horari, isOpen: isOpen, afluence: afluenceInfo } })
   } catch (err) {
     res.status(500).send('External API server error')
+  }
+})
+
+router.get('/quizzes', async (req, res) => {
+  try {
+    const docs = await Quizz.find()
+    if (!docs) {
+      throw new Error('no document found')
+    }
+    res.json({ quizzes: docs })
+  } catch {
+    res.status(404).send('No quizzes found')
   }
 })
 

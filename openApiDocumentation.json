@@ -810,6 +810,30 @@
           }
         }
       }
+    },
+    "/quizzes": {
+      "get": {
+        "tags": ["Quizzes"],
+        "summary": "Get quizzes",
+        "description": "Retrieving all the quizzes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The quizzes retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "No quizzes found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
