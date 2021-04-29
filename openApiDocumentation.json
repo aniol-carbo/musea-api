@@ -210,6 +210,59 @@
             }
           }
         }
+      },
+      "put": {
+        "tags": ["Museums"],
+        "summary": "Edit museum",
+        "description": "Editing a museum by the given id",
+        "parameters": [
+          {
+            "name": "museumId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the museum"
+          },
+          {
+            "name": "ca",
+            "in": "query",
+            "required": false,
+            "description": "Catalan description of the museum"
+          },
+          {
+            "name": "es",
+            "in": "query",
+            "required": false,
+            "description": "Spanish description of the museum"
+          },
+          {
+            "name": "en",
+            "in": "query",
+            "required": false,
+            "description": "English description of the museum"
+          },
+          {
+            "name": "image",
+            "in": "query",
+            "required": false,
+            "description": "Url of the museum's image"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The museum was edited successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no museum for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
       }
     },
     "/museums/{museumId}/{expositionId}": {
@@ -359,6 +412,71 @@
             }
           }
         }
+      },
+      "put": {
+        "tags": ["Museums"],
+        "summary": "Edit exposition",
+        "description": "Editing an exposition by the given id",
+        "parameters": [
+          {
+            "name": "museumId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the hosting museum"
+          },
+          {
+            "name": "expositionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the exposition"
+          },
+          {
+            "name": "room",
+            "in": "query",
+            "required": false,
+            "description": "Room where the exposition is located"
+          },
+          {
+            "name": "ca",
+            "in": "query",
+            "required": false,
+            "description": "Catalan description of the exposition"
+          },
+          {
+            "name": "es",
+            "in": "query",
+            "required": false,
+            "description": "Spanish description of the exposition"
+          },
+          {
+            "name": "en",
+            "in": "query",
+            "required": false,
+            "description": "English description of the exposition"
+          },
+          {
+            "name": "image",
+            "in": "query",
+            "required": false,
+            "description": "Url of the exposition's image"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The exposition was edited successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no exposition for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
       }
     },
     "/museums/{museumId}/{expositionId}/{artworkId}": {
@@ -430,6 +548,83 @@
         "responses": {
           "200": {
             "description": "The artwork was deleted",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no artwork for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Museums"],
+        "summary": "Edit artwork",
+        "description": "Editing an artwork by the given id",
+        "parameters": [
+          {
+            "name": "museumId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the hosting museum"
+          },
+          {
+            "name": "expositionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the hosting exposition"
+          },
+          {
+            "name": "artworkId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the artwork"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "description": "Type of the artwork"
+          },
+          {
+            "name": "ca",
+            "in": "query",
+            "required": false,
+            "description": "Catalan description of the artwork"
+          },
+          {
+            "name": "es",
+            "in": "query",
+            "required": false,
+            "description": "Spanish description of the artwork"
+          },
+          {
+            "name": "en",
+            "in": "query",
+            "required": false,
+            "description": "English description of the artwork"
+          },
+          {
+            "name": "image",
+            "in": "query",
+            "required": false,
+            "description": "Url of the artwork's image"
+          },
+          {
+            "name": "score",
+            "in": "query",
+            "required": false,
+            "description": "Score of the artwork"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The artwork was edited successfully",
             "content": {
               "application/json": {
               }

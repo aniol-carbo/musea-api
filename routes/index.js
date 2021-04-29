@@ -594,9 +594,13 @@ router.delete('/museums/:museumId/:expositionId/:artworkId', async (req, res) =>
 // PUT /users/userName with params bio=newBio & name=newName
 router.put('/users/:userId', async (req, res) => {
   const user = req.params.userId
-  const name = req.query.name
-  const bio = req.query.bio
   try {
+    const doc = await User.findById(user)
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    const name = req.query.name ? req.query.name : doc.name
+    const bio = req.query.bio ? req.query.bio : doc.bio
     const updated = await User.updateOne({ userId: user }, {
       name: name,
       bio: bio
@@ -608,6 +612,105 @@ router.put('/users/:userId', async (req, res) => {
     }
   } catch {
     res.status(404).send('There is no user for such id')
+  }
+})
+
+router.put('/museums/:museumId', async (req, res) => {
+  const museum = req.params.museumId
+  try {
+    const doc = await Museum.findById(museum)
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    const ca = req.query.ca ? req.query.ca : doc.descriptions.ca
+    const es = req.query.es ? req.query.es : doc.descriptions.es
+    const en = req.query.en ? req.query.en : doc.descriptions.en
+    const descriptions = {
+      ca: ca,
+      es: es,
+      en: en
+    }
+    const image = req.query.image ? req.query.image : doc.image
+    const updated = await Museum.updateOne({ _id: museum }, {
+      descriptions: descriptions,
+      image: image
+    })
+    if (!updated) {
+      throw new Error('no document found')
+    } else {
+      res.redirect('/museums/' + museum)
+    }
+  } catch {
+    res.status(404).send('There is no museum for such id')
+  }
+})
+
+router.put('/museums/:museumId/:expositionId', async (req, res) => {
+  const museum = req.params.museumId
+  const expo = req.params.expositionId
+  try {
+    const doc = await Exposition.findById(expo)
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    const room = req.query.room ? req.query.room : doc.room
+    const ca = req.query.ca ? req.query.ca : doc.descriptions.ca
+    const es = req.query.es ? req.query.es : doc.descriptions.es
+    const en = req.query.en ? req.query.en : doc.descriptions.en
+    const descriptions = {
+      ca: ca,
+      es: es,
+      en: en
+    }
+    const image = req.query.image ? req.query.image : doc.image
+    const updated = await Exposition.updateOne({ _id: expo }, {
+      room: room,
+      descriptions: descriptions,
+      image: image
+    })
+    if (!updated) {
+      throw new Error('no document found')
+    } else {
+      res.redirect('/museums/' + museum + '/' + expo)
+    }
+  } catch {
+    res.status(404).send('There is no exposition for such id')
+  }
+})
+
+router.put('/museums/:museumId/:expositionId/:artworkId', async (req, res) => {
+  const museum = req.params.museumId
+  const expo = req.params.expositionId
+  const artwork = req.params.artworkId
+  try {
+    const doc = await Work.findById(artwork)
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    const type = req.query.type ? req.query.type : doc.type
+    const ca = req.query.ca ? req.query.ca : doc.descriptions.ca
+    const es = req.query.es ? req.query.es : doc.descriptions.es
+    const en = req.query.en ? req.query.en : doc.descriptions.en
+    const descriptions = {
+      ca: ca,
+      es: es,
+      en: en
+    }
+    const image = req.query.image ? req.query.image : doc.image
+    const score = req.query.score ? req.query.score : doc.score
+    const updated = await Work.updateOne({ _id: artwork }, {
+      descriptions: descriptions,
+      image: image,
+      type: type,
+      score: score
+    })
+    if (!updated) {
+      throw new Error('no document found')
+    } else {
+      res.redirect('/museums/' + museum + '/' + expo + '/' + artwork)
+    }
+  } catch {
+    res.status(404).send('There is no artwork for such id')
   }
 })
 
