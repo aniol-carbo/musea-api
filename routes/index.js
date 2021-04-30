@@ -578,7 +578,6 @@ router.delete('/museums/:museumId/:expositionId', async (req, res) => {
 })
 
 router.delete('/museums/:museumId/:expositionId/:artworkId', async (req, res) => {
-  const museum = req.params.museumId
   const exposition = req.params.expositionId
   const artwork = req.params.artworkId
   try {
@@ -665,7 +664,6 @@ router.put('/museums/:museumId', async (req, res) => {
 })
 
 router.put('/museums/:museumId/:expositionId', async (req, res) => {
-  const museum = req.params.museumId
   const expo = req.params.expositionId
   try {
     const doc = await Exposition.findById(expo)
@@ -698,8 +696,6 @@ router.put('/museums/:museumId/:expositionId', async (req, res) => {
 })
 
 router.put('/museums/:museumId/:expositionId/:artworkId', async (req, res) => {
-  const museum = req.params.museumId
-  const expo = req.params.expositionId
   const artwork = req.params.artworkId
   try {
     const doc = await Work.findById(artwork)
