@@ -910,7 +910,7 @@
         "description": "Add or remove a favourite museum from the given user",
         "parameters": [
           {
-            "name": "username",
+            "name": "userId",
             "in": "path",
             "required": true,
             "description": "Username of the user"
@@ -991,6 +991,43 @@
         "responses": {
           "200": {
             "description": "The museum was added/removed successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/points": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Update points",
+        "description": "Updating the points from the given user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Username of the user"
+          },
+          {
+            "name": "points",
+            "in": "query",
+            "required": true,
+            "description": "Number of points to add to the user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user's points were updated successfully",
             "content": {
               "application/json": {
               }

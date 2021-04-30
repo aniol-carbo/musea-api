@@ -512,6 +512,25 @@ router.post('/users/:userId/visited', async (req, res) => {
   }
 })
 
+// POST /users/userName/visited with params points=puntosGanados
+router.post('/users/:userId/points', async (req, res) => {
+  const user = req.params.userId
+  try {
+    const doc = await User.findOne({ userId: user }, 'points')
+    let points = doc.points
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    points += req.query.points
+    await User.updateOne({ userId: user }, {
+      points: points
+    })
+    res.redirect('/users/' + user)
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
+})
+
 // ----------------- DELETE -------------------- //
 
 router.delete('/museums/:museumId', async (req, res) => {
@@ -521,7 +540,7 @@ router.delete('/museums/:museumId', async (req, res) => {
     if (!deleted) {
       throw new Error('no document found')
     } else {
-      res.redirect('/museums')
+      res.status(200).send('Museum deleted')
     }
   } catch {
     res.status(404).send('There is no museum for such id')
@@ -549,7 +568,7 @@ router.delete('/museums/:museumId/:expositionId', async (req, res) => {
         if (!updated) {
           throw new Error('no document found')
         } else {
-          res.redirect('/museums/' + museum)
+          res.status(200).send('Exposition deleted')
         }
       }
     }
@@ -580,7 +599,7 @@ router.delete('/museums/:museumId/:expositionId/:artworkId', async (req, res) =>
         if (!updated) {
           throw new Error('no document found')
         } else {
-          res.redirect('/museums/' + museum + '/' + exposition)
+          res.status(200).send('Artwork deleted')
         }
       }
     }
@@ -608,7 +627,7 @@ router.put('/users/:userId', async (req, res) => {
     if (!updated) {
       throw new Error('no document found')
     } else {
-      res.redirect('/users/' + user)
+      res.status(200).send('User edited')
     }
   } catch {
     res.status(404).send('There is no user for such id')
@@ -638,7 +657,7 @@ router.put('/museums/:museumId', async (req, res) => {
     if (!updated) {
       throw new Error('no document found')
     } else {
-      res.redirect('/museums/' + museum)
+      res.status(200).send('Museum edited')
     }
   } catch {
     res.status(404).send('There is no museum for such id')
@@ -671,7 +690,7 @@ router.put('/museums/:museumId/:expositionId', async (req, res) => {
     if (!updated) {
       throw new Error('no document found')
     } else {
-      res.redirect('/museums/' + museum + '/' + expo)
+      res.status(200).send('Exposition edited')
     }
   } catch {
     res.status(404).send('There is no exposition for such id')
@@ -707,7 +726,7 @@ router.put('/museums/:museumId/:expositionId/:artworkId', async (req, res) => {
     if (!updated) {
       throw new Error('no document found')
     } else {
-      res.redirect('/museums/' + museum + '/' + expo + '/' + artwork)
+      res.status(200).send('Artwork edited')
     }
   } catch {
     res.status(404).send('There is no artwork for such id')
