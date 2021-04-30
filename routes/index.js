@@ -512,7 +512,7 @@ router.post('/users/:userId/visited', async (req, res) => {
   }
 })
 
-// POST /users/userName/visited with params points=puntosGanados
+// POST /users/userName/points with params points=puntosGanados
 router.post('/users/:userId/points', async (req, res) => {
   const user = req.params.userId
   try {
