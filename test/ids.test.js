@@ -214,7 +214,7 @@ describe('Museums', () => {
         if (e) console.log(e)
         const user = new User({ _id: ObjectId(), userId: 'user2', name: 'Juan', bio: 'Me encanta Da Vinci', favourites: [m.id], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: ['6048d3d2eaf9c527ba4de26b'], likes: ['6048dd75eaf9c527ba4de26c'] })
         user.save((err, u) => {
-          if (err) console.log(e)
+          if (err) console.log(err)
           chai.request(server)
             .get('/users/' + u.userId + '/favourites')
           //   .send(museum)
@@ -227,6 +227,29 @@ describe('Museums', () => {
             })
         })
       })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/POST/users', () => {
+    // eslint-disable-next-line no-undef
+    it('it should create a new user', (done) => {
+      const username = 'testUser2'
+      const email = 'test2@email.com'
+      chai.request(server)
+        .post(`/users?username=${username}&email=${email}`)
+        // .send({ username: username, email: email })
+        .end((error, res) => {
+          if (error) console.log(error)
+          // console.log(res.body)
+          res.should.have.status(200)
+          res.body.should.be.a('object')
+          res.body.userId.should.be.a('string')
+          res.body.email.should.be.a('string')
+          res.body.userId.should.be.equal(username)
+          res.body.email.should.be.equal(email)
+          done()
+        })
     })
   })
 })
