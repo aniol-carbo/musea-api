@@ -736,14 +736,14 @@
         }
       }
     },
-    "/users/{userId}": {
+    "/users/{username}": {
       "get": {
         "tags": ["Users"],
         "summary": "Get user by id",
         "description": "Retrieving a user by the given id",
         "parameters": [
           {
-            "name": "userId",
+            "name": "username",
             "in": "path",
             "required": true,
             "description": "Id of the desired user"
@@ -772,7 +772,7 @@
         "description": "Editing the user's name and bio",
         "parameters": [
           {
-            "name": "userId",
+            "name": "username",
             "in": "path",
             "required": true,
             "description": "Id of the desired user"
@@ -808,14 +808,14 @@
         }
       }
     },
-    "/users/{userId}/likes": {
+    "/users/{username}/likes": {
       "get": {
         "tags": ["Users"],
         "summary": "Get likes",
         "description": "Retrieving the user's liked artworks",
         "parameters": [
           {
-            "name": "userId",
+            "name": "username",
             "in": "path",
             "required": true,
             "description": "Id of the desired user"
@@ -874,14 +874,14 @@
         }
       }
     },
-    "/users/{userId}/favourites": {
+    "/users/{username}/favourites": {
       "get": {
         "tags": ["Users"],
         "summary": "Get favourite museums",
         "description": "Retrieving the user's favourite museums",
         "parameters": [
           {
-            "name": "userId",
+            "name": "username",
             "in": "path",
             "required": true,
             "description": "Id of the desired user"
@@ -910,7 +910,7 @@
         "description": "Add or remove a favourite museum from the given user",
         "parameters": [
           {
-            "name": "userId",
+            "name": "username",
             "in": "path",
             "required": true,
             "description": "Username of the user"
@@ -940,14 +940,14 @@
         }
       }
     },
-    "/users/{userId}/visited": {
+    "/users/{username}/visited": {
       "get": {
         "tags": ["Users"],
         "summary": "Get visited museums",
         "description": "Retrieving the museums that the user has visited",
         "parameters": [
           {
-            "name": "userId",
+            "name": "username",
             "in": "path",
             "required": true,
             "description": "Id of the desired user"
@@ -1006,14 +1006,14 @@
         }
       }
     },
-    "/users/{userId}/points": {
+    "/users/{username}/points": {
       "post": {
         "tags": ["Users"],
         "summary": "Update points",
         "description": "Updating the points from the given user",
         "parameters": [
           {
-            "name": "userId",
+            "name": "username",
             "in": "path",
             "required": true,
             "description": "Username of the user"

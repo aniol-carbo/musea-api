@@ -163,8 +163,8 @@ router.get('/users', async (req, res) => {
 })
 
 // GET /users/username to get the user's info
-router.get('/users/:userId', async (req, res) => {
-  const id = req.params.userId
+router.get('/users/:username', async (req, res) => {
+  const id = req.params.username
   try {
     const doc = await User.findOne({ userId: id })
     if (!doc) {
@@ -177,8 +177,8 @@ router.get('/users/:userId', async (req, res) => {
 })
 
 // GET /users/username/likes to get all liked artworks by the user
-router.get('/users/:userId/likes', async (req, res) => {
-  const id = req.params.userId
+router.get('/users/:username/likes', async (req, res) => {
+  const id = req.params.username
   try {
     const doc = await User.findOne({ userId: id }, 'likes')
     if (!doc) {
@@ -201,8 +201,8 @@ router.get('/users/:userId/likes', async (req, res) => {
 })
 
 // GET /users/username/favourites to get all liked museums by the user
-router.get('/users/:userId/favourites', async (req, res) => {
-  const id = req.params.userId
+router.get('/users/:username/favourites', async (req, res) => {
+  const id = req.params.username
   try {
     const doc = await User.findOne({ userId: id }, 'favourites')
     if (!doc) {
@@ -225,8 +225,8 @@ router.get('/users/:userId/favourites', async (req, res) => {
 })
 
 // GET /users/username/visited to get all visited museums by the user
-router.get('/users/:userId/visited', async (req, res) => {
-  const id = req.params.userId
+router.get('/users/:username/visited', async (req, res) => {
+  const id = req.params.username
   try {
     const doc = await User.findOne({ userId: id }, 'visited')
     if (!doc) {
@@ -426,8 +426,8 @@ router.post('/users', (req, res) => {
 })
 
 // POST /users/userName/likes with params artwork=artworkId
-router.post('/users/:userId/likes', async (req, res) => {
-  const user = req.params.userId
+router.post('/users/:username/likes', async (req, res) => {
+  const user = req.params.username
   const artwork = ObjectId(req.query.artwork)
   let likes = []
   try {
@@ -456,8 +456,8 @@ router.post('/users/:userId/likes', async (req, res) => {
 })
 
 // POST /users/userName/favourites with params museum=museumId
-router.post('/users/:userId/favourites', async (req, res) => {
-  const user = req.params.userId
+router.post('/users/:username/favourites', async (req, res) => {
+  const user = req.params.username
   const museum = ObjectId(req.query.museum)
   let favourites = []
   try {
@@ -486,8 +486,8 @@ router.post('/users/:userId/favourites', async (req, res) => {
 })
 
 // POST /users/userName/visited with params museum=museumId
-router.post('/users/:userId/visited', async (req, res) => {
-  const user = req.params.userId
+router.post('/users/:username/visited', async (req, res) => {
+  const user = req.params.username
   const museum = ObjectId(req.query.museum)
   let visited = []
   try {
@@ -513,8 +513,8 @@ router.post('/users/:userId/visited', async (req, res) => {
 })
 
 // POST /users/userName/points with params points=puntosGanados
-router.post('/users/:userId/points', async (req, res) => {
-  const user = req.params.userId
+router.post('/users/:username/points', async (req, res) => {
+  const user = req.params.username
   try {
     const doc = await User.findOne({ userId: user }, 'points')
     let points = doc.points
@@ -610,10 +610,10 @@ router.delete('/museums/:museumId/:expositionId/:artworkId', async (req, res) =>
 // ----------------- PUT -------------------- //
 
 // PUT /users/userName with params bio=newBio & name=newName
-router.put('/users/:userId', async (req, res) => {
-  const user = req.params.userId
+router.put('/users/:username', async (req, res) => {
+  const user = req.params.username
   try {
-    const doc = await User.findById(user)
+    const doc = await User.findOne({ userId: user })
     if (!doc) {
       throw new Error('no document found')
     }
