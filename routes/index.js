@@ -309,8 +309,8 @@ router.post('/museums', (req, res) => {
   }
   const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country, descriptions: descriptions, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
   museum.save((e, mus) => {
-    console.log(e)
-    res.send(mus)
+    if (e) console.log(e)
+    res.status(200).send(mus)
   })
 })
 
@@ -340,7 +340,7 @@ router.post('/museums/:museumId', async (req, res) => {
       expositions.push(expoId)
     }
   } catch {
-    res.stuatus(404).send('There is no museum for such id')
+    res.status(404).send('There is no museum for such id')
   }
 
   // updating the museum (add the expo to its expos array)
@@ -351,7 +351,7 @@ router.post('/museums/:museumId', async (req, res) => {
     if (!updated) {
       throw new Error('error when updating the document')
     } else {
-      res.redirect('/museums/' + museum)
+      res.status(200).send(exp)
     }
   } catch {
     res.status(500).send('Could not update the museum with the new exposition')
@@ -359,7 +359,6 @@ router.post('/museums/:museumId', async (req, res) => {
 })
 
 router.post('/museums/:museumId/:expositionId', async (req, res) => {
-  const museum = req.params.museumId
   const exposition = req.params.expositionId
   const title = req.query.title
   const author = req.query.author
@@ -370,7 +369,6 @@ router.post('/museums/:museumId/:expositionId', async (req, res) => {
     es: req.query.es,
     en: req.query.en
   }
-
   // creating the new artwork
   const artwork = new Work({ _id: ObjectId(), title: title, author: author, score: score, type: type, descriptions: descriptions, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
   let work
@@ -393,23 +391,13 @@ router.post('/museums/:museumId/:expositionId', async (req, res) => {
       if (doc.works != null) works = doc.works
       const workId = ObjectId(work.id)
       works.push(workId)
+      await Exposition.updateOne({ _id: exposition }, {
+        works: works
+      })
+      res.status(200).send(work)
     }
   } catch {
     res.status(404).send('There is no expo for such id')
-  }
-
-  // updating the museum (add the expo to its expos array)
-  try {
-    const updated = await Exposition.updateOne({ _id: exposition }, {
-      works: works
-    })
-    if (!updated) {
-      throw new Error('error when updating the document')
-    } else {
-      res.redirect('/museums/' + museum + '/' + exposition)
-    }
-  } catch {
-    res.status(500).send('Could not update the exposition with the new artwork')
   }
 })
 

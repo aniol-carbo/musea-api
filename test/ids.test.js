@@ -6,6 +6,7 @@ const Museum = require('../models/museum')
 const Exposition = require('../models/exposition')
 const Work = require('../models/artwork')
 const User = require('../models/user')
+const Quizz = require('../models/quizz')
 
 const chai = require('chai')
 const chaiHttp = require('chai-http')
@@ -27,7 +28,10 @@ describe('Museums', () => {
           if (err) console.log(err)
           User.deleteMany({}, (erro) => {
             if (erro) console.log(erro)
-            done()
+            Quizz.deleteMany({}, (error) => {
+              if (error) console.log(error)
+              done()
+            })
           })
         })
       })
@@ -46,6 +50,7 @@ describe('Museums', () => {
           // eslint-disable-next-line no-unused-expressions
           res.should.to.be.json
           res.body.should.be.a('object')
+          res.body.museums.should.be.a('array')
           done()
         })
     })
@@ -153,6 +158,121 @@ describe('Museums', () => {
   })
 
   // eslint-disable-next-line no-undef
+  describe('/POST/museums', () => {
+    // eslint-disable-next-line no-undef
+    it('it should create a new museum', (done) => {
+      const name = 'test museum'
+      const address = 'test address'
+      const city = 'test city'
+      const country = 'test country'
+      const ca = 'test ca'
+      const es = 'test es'
+      const en = 'test en'
+      chai.request(server)
+        .post(`/museums?name=${name}&address=${address}&city=${city}&country=${country}&ca=${ca}&es=${es}&en=${en}`)
+        .end((error, res) => {
+          if (error) console.log(error)
+          res.should.have.status(200)
+          res.body.should.be.a('object')
+          res.body.name.should.be.a('string').equal(name)
+          res.body.address.should.be.a('string').equal(address)
+          res.body.city.should.be.a('string').equal(city)
+          res.body.country.should.be.a('string').equal(country)
+          res.body.descriptions.ca.should.be.a('string').equal(ca)
+          res.body.descriptions.es.should.be.a('string').equal(es)
+          res.body.descriptions.en.should.be.a('string').equal(en)
+          done()
+        })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/POST/museums/:museumId', () => {
+    // eslint-disable-next-line no-undef
+    it('it should create a new exposition', (done) => {
+      const museum = new Museum({ _id: ObjectId(), name: 'MACBA', address: 'Plaça Skaters', city: 'Barcelona', country: 'Spain', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', expositions: [], restrictions: [] })
+      museum.save((e, m) => {
+        if (e) console.log(e)
+        const name = 'test museum'
+        const room = 'test room'
+        const ca = 'test ca'
+        const es = 'test es'
+        const en = 'test en'
+        chai.request(server)
+          .post(`/museums/${m.id}?name=${name}&room=${room}&ca=${ca}&es=${es}&en=${en}`)
+          .end((error, res) => {
+            if (error) console.log(error)
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.name.should.be.a('string').equal(name)
+            res.body.room.should.be.a('string').equal(room)
+            res.body.descriptions.ca.should.be.a('string').equal(ca)
+            res.body.descriptions.es.should.be.a('string').equal(es)
+            res.body.descriptions.en.should.be.a('string').equal(en)
+            done()
+          })
+      })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/POST/museums/:museumId/:expositionId', () => {
+    // eslint-disable-next-line no-undef
+    it('it should create a new artwork', (done) => {
+      const museum = new Museum({ _id: ObjectId(), name: 'MACBA', address: 'Plaça Skaters', city: 'Barcelona', country: 'Spain', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', expositions: [], restrictions: [] })
+      const exposition = new Exposition({ _id: ObjectId(), name: 'Main Expo', room: 'Main Hall', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, works: ['6048dd75eaf9c527ba4de26c'], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      museum.save((e, mus) => {
+        if (e) console.log(e)
+        exposition.save((er, expo) => {
+          if (er) console.log(er)
+          const title = 'test title'
+          const author = 'test author'
+          const score = 7.5
+          const type = 'test type'
+          const ca = 'test ca'
+          const es = 'test es'
+          const en = 'test en'
+          chai.request(server)
+            .post(`/museums/${mus.id}/${expo.id}?title=${title}&author=${author}&score=${score}&type=${type}&ca=${ca}&es=${es}&en=${en}`)
+            .end((error, res) => {
+              if (error) console.log(error)
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.title.should.be.a('string').equal(title)
+              res.body.author.should.be.a('string').equal(author)
+              res.body.score.should.be.a('number').equal(score)
+              res.body.type.should.be.a('string').equal(type)
+              res.body.descriptions.ca.should.be.a('string').equal(ca)
+              res.body.descriptions.es.should.be.a('string').equal(es)
+              res.body.descriptions.en.should.be.a('string').equal(en)
+              done()
+            })
+        })
+      })
+    })
+  })
+})
+
+// eslint-disable-next-line no-undef
+describe('Users', () => {
+  // eslint-disable-next-line no-undef
+  describe('/GET/users', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET all the users', (done) => {
+      chai.request(server)
+        .get('/users')
+        .end((e, res) => {
+          if (e) console.log(e)
+          res.should.have.status(200)
+          // eslint-disable-next-line no-unused-expressions
+          res.should.to.be.json
+          res.body.should.be.a('object')
+          done()
+        })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
   describe('/GET/users/:userId ', () => {
     // eslint-disable-next-line no-undef
     it('it should GET a user by the given id', (done) => {
@@ -231,6 +351,31 @@ describe('Museums', () => {
   })
 
   // eslint-disable-next-line no-undef
+  describe('/GET/users/:userId/visited ', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET the visited museums by the user', (done) => {
+      const museum = new Museum({ _id: ObjectId(), name: 'testVisitedMuseum', address: 'testVisitedAddress', city: 'testVisitedCity', country: 'testVisitedCountry', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, expositions: [], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      museum.save((e, m) => {
+        if (e) console.log(e)
+        const user = new User({ _id: ObjectId(), userId: 'testUser', name: 'testUser', bio: 'testBio', favourites: [m.id], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [m.id], likes: [] })
+        user.save((err, u) => {
+          if (err) console.log(err)
+          chai.request(server)
+            .get('/users/' + u.userId + '/visited')
+          //   .send(users)
+            .end((error, res) => {
+              if (error) console.log(error)
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.visited.should.be.a('array')
+              done()
+            })
+        })
+      })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
   describe('/POST/users', () => {
     // eslint-disable-next-line no-undef
     it('it should create a new user', (done) => {
@@ -244,10 +389,28 @@ describe('Museums', () => {
           // console.log(res.body)
           res.should.have.status(200)
           res.body.should.be.a('object')
-          res.body.userId.should.be.a('string')
-          res.body.email.should.be.a('string')
-          res.body.userId.should.be.equal(username)
-          res.body.email.should.be.equal(email)
+          res.body.userId.should.be.a('string').equal(username)
+          res.body.email.should.be.a('string').equal(email)
+          done()
+        })
+    })
+  })
+})
+
+// eslint-disable-next-line no-undef
+describe('Quizzes', () => {
+  // eslint-disable-next-line no-undef
+  describe('/GET/quizzes', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET all the quizzes', (done) => {
+      chai.request(server)
+        .get('/quizzes')
+        .end((e, res) => {
+          if (e) console.log(e)
+          res.should.have.status(200)
+          // eslint-disable-next-line no-unused-expressions
+          res.should.to.be.json
+          res.body.should.be.a('object')
           done()
         })
     })
