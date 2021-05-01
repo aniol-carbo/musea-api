@@ -531,7 +531,7 @@ router.post('/users/:username/points', async (req, res) => {
   }
 })
 
-router.post('/quizzes', (req, res) => {
+router.post('/quizzes', async (req, res) => {
   const question = {
     ca: req.query.question_ca,
     es: req.query.question_es,
@@ -564,11 +564,16 @@ router.post('/quizzes', (req, res) => {
       correct: req.query.answer_4_correct
     }
   ]
-  const quizz = new Quizz({ _id: ObjectId(), question: question, points: points, answers: answers })
-  quizz.save((e, q) => {
-    console.log(e)
-    res.send(q)
-  })
+  try {
+    const quizz = new Quizz({ _id: ObjectId(), question: question, points: points, answers: answers })
+    const doc = await quizz.save()
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    res.status(200).send(doc)
+  } catch {
+    res.status(500).send('Could not create the quizz')
+  }
 })
 
 // ----------------- DELETE -------------------- //
