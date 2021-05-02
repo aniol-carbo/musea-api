@@ -424,12 +424,8 @@ router.post('/users/:username/likes', async (req, res) => {
     if (!doc) {
       throw new Error('no document found')
     }
-    let found = false
-    for (const aw of likes) {
-      if (aw.equals(artwork)) found = true
-    }
-    if (found) {
-      const index = likes.indexOf(artwork)
+    const index = likes.indexOf(artwork)
+    if (index !== -1) {
       likes.splice(index, 1)
     } else {
       likes.push(artwork)
@@ -437,7 +433,7 @@ router.post('/users/:username/likes', async (req, res) => {
     await User.updateOne({ userId: user }, {
       likes: likes
     })
-    res.redirect('/users/' + user)
+    res.redirect(`/users/${user}`)
   } catch {
     res.status(404).send('There is no user for such id')
   }

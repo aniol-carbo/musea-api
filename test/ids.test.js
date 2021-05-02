@@ -309,7 +309,7 @@ describe('Users', () => {
         if (e) console.log(e)
         const user = new User({ _id: ObjectId(), userId: 'user1', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: ['6048dd75eaf9c527ba4de26c'], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: ['6048d3d2eaf9c527ba4de26b'], likes: [a.id] })
         user.save((err, u) => {
-          if (err) console.log(e)
+          if (err) console.log(err)
           chai.request(server)
             .get('/users/' + u.userId + '/likes')
           //   .send(museum)
@@ -393,6 +393,41 @@ describe('Users', () => {
           res.body.email.should.be.a('string').equal(email)
           done()
         })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/POST/users/:username/likes', () => {
+    // eslint-disable-next-line no-undef
+    it('it should like an artwork', (done) => {
+      const artwork = new Work({ _id: ObjectId(), title: 'Nova obra', author: 'Munch', score: 9.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      artwork.save((e, a) => {
+        if (e) console.log(e)
+        const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+        user.save((err, u) => {
+          if (err) console.log(err)
+          const username = u.userId
+          const artwork = a.id
+          chai.request(server)
+            .post(`/users/${username}/likes?artwork=${artwork}`)
+            // .send({ username: username, email: email })
+            .end((error, res) => {
+              if (error) console.log(error)
+              // console.log(res.body)
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.user.should.have.property('name')
+              res.body.user.should.have.property('userId')
+              res.body.user.should.have.property('points')
+              res.body.user.should.have.property('favourites')
+              res.body.user.should.have.property('bio')
+              res.body.user.should.have.property('profilePic')
+              res.body.user.should.have.property('premium')
+              res.body.user.should.have.property('visited')
+              done()
+            })
+        })
+      })
     })
   })
 })
