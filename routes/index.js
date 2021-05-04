@@ -24,6 +24,7 @@ const Work = require('../models/artwork')
 const User = require('../models/user')
 const Restriction = require('../models/restriction')
 const Quizz = require('../models/quizz')
+const Comment = require('../models/comment')
 
 router.get('/museums', async (req, res) => {
   try {
@@ -298,6 +299,22 @@ router.get('/quizzes', async (req, res) => {
   }
 })
 
+router.get('/comments', async (req, res) => {
+  const id = req.query.artworkId
+  try {
+    if (id === undefined) {
+      throw new Error('parameter required')
+    }
+    const doc = await Comment.find({ artwork: id })
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    res.json({ comments: doc })
+  } catch {
+    res.status(404).send('No comments found')
+  }
+})
+
 // ----------------- POST -------------------- //
 
 router.post('/museums', (req, res) => {
@@ -569,6 +586,22 @@ router.post('/quizzes', async (req, res) => {
   }
 })
 
+router.post('/comments', async (req, res) => {
+  const artwork = req.query.artworkId
+  const content = req.query.content
+  const author = req.query.author
+  try {
+    const comment = new Comment({ _id: ObjectId(), content: content, author: author, artwork: artwork })
+    const doc = await comment.save()
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    res.status(200).send(doc)
+  } catch {
+    res.status(500).send('Could not create the comment')
+  }
+})
+
 // ----------------- DELETE -------------------- //
 
 router.delete('/museums/:museumId', async (req, res) => {
@@ -644,6 +677,20 @@ router.delete('/museums/:museumId/:expositionId/:artworkId', async (req, res) =>
     res.status(404).send('There is no museum for such id')
   }
 })
+
+router.delete('/comments/:commentId', async (req, res) => {
+  const id = req.params.commentId
+  try {
+    const doc = await Comment.findByIdAndDelete(id)
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    res.status(200).send('Comment deleted')
+  } catch {
+    res.status(404).send('No comments found by the given id')
+  }
+})
+
 
 // ----------------- PUT -------------------- //
 

@@ -1209,6 +1209,109 @@
           }
         }
       }
+    },
+    "/comments": {
+      "get": {
+        "tags": ["Comments"],
+        "summary": "Get comments",
+        "description": "Retrieving the comments from the given artwork",
+        "parameters": [
+          {
+            "name": "artworkId",
+            "in": "query",
+            "required": true,
+            "description": "Id of the desired artwork"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The comments were retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "No comments found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Comments"],
+        "summary": "Create a comment",
+        "description": "Adding a comments to the given artwork",
+        "parameters": [
+          {
+            "name": "artworkId",
+            "in": "query",
+            "required": true,
+            "description": "Id of the desired artwork"
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "required": true,
+            "description": "Content of the comment"
+          },
+          {
+            "name": "author",
+            "in": "query",
+            "required": true,
+            "description": "Username of the author"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The comment was created",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "500": {
+            "description": "Could not create the comment",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/{commentId}": {
+      "delete": {
+        "tags": ["Comments"],
+        "summary": "Delete a comment",
+        "description": "Deleting a comments from the given artwork",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the comment to be deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The comment was deleted",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "No comments found by the given id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
