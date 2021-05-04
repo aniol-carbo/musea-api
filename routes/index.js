@@ -691,7 +691,6 @@ router.delete('/comments/:commentId', async (req, res) => {
   }
 })
 
-
 // ----------------- PUT -------------------- //
 
 // PUT /users/userName with params bio=newBio & name=newName
@@ -704,9 +703,11 @@ router.put('/users/:username', async (req, res) => {
     }
     const name = req.query.name ? req.query.name : doc.name
     const bio = req.query.bio ? req.query.bio : doc.bio
+    const profilePic = req.query.profilePic ? req.query.profilePic : doc.profilePic
     const updated = await User.updateOne({ userId: user }, {
       name: name,
-      bio: bio
+      bio: bio,
+      profilePic: profilePic
     })
     if (!updated) {
       throw new Error('no document found')
