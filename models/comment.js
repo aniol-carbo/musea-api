@@ -7,7 +7,9 @@ const CommentSchema = new Schema({
   _id: ObjectId,
   content: String,
   author: String,
-  artwork: String
+  artwork: String,
+  datetime: Date,
+  image: String
 })
 
 module.exports = mongoose.model('comments', CommentSchema)
