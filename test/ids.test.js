@@ -407,9 +407,9 @@ describe('Users', () => {
         user.save((err, u) => {
           if (err) console.log(err)
           const username = u.userId
-          const artwork = a.id
+          const artworkId = a.id
           chai.request(server)
-            .post(`/users/${username}/likes?artwork=${artwork}`)
+            .post(`/users/${username}/likes?artwork=${artworkId}`)
             // .send({ username: username, email: email })
             .end((error, res) => {
               if (error) console.log(error)
