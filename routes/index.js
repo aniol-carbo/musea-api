@@ -1,6 +1,10 @@
 const express = require('express')
 const axios = require('axios')
 const router = express.Router()
+router.use(express.json())
+router.use(express.urlencoded({
+  extended: true
+}))
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 let url
@@ -10,7 +14,6 @@ mongoose.connect(url, { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', error => console.error(error))
 // db.once('open', () => console.log('Connected to Mongoose'))
-
 router.get('/', (req, res) => {
   res.render('index')
 })
@@ -307,7 +310,13 @@ router.post('/museums', (req, res) => {
     es: req.query.es,
     en: req.query.en
   }
-  const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country, descriptions: descriptions, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+  const restrictions = []
+  if (req.body.restrictions) {
+    const restriction = new Restriction({ _id: ObjectId(), text: req.body.restrictions })
+    restriction.save((e, r) => { if (e) throw Error('no document created') })
+    restrictions.push(ObjectId(restriction.id))
+  }
+  const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country, descriptions: descriptions, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', restrictions: restrictions })
   museum.save((e, mus) => {
     if (e) console.log(e)
     res.status(200).send(mus)
@@ -678,9 +687,16 @@ router.put('/museums/:museumId', async (req, res) => {
       en: en
     }
     const image = req.query.image ? req.query.image : doc.image
+    const restrictions = doc.restrictions
+    if (req.body.restrictions) {
+      const restriction = new Restriction({ _id: ObjectId(), text: req.body.restrictions })
+      restriction.save((e, r) => { if (e) throw Error('no document created') })
+      restrictions.push(ObjectId(restriction.id))
+    }
     const updated = await Museum.updateOne({ _id: museum }, {
       descriptions: descriptions,
-      image: image
+      image: image,
+      restrictions: restrictions
     })
     if (!updated) {
       throw new Error('no document found')
@@ -756,6 +772,11 @@ router.put('/museums/:museumId/:expositionId/:artworkId', async (req, res) => {
   } catch {
     res.status(404).send('There is no artwork for such id')
   }
+})
+
+router.post('/restrictions', async (req, res) => {
+  console.log(req.body)
+  res.send(req.body)
 })
 
 module.exports = router
