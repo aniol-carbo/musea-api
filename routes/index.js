@@ -327,13 +327,14 @@ router.post('/museums', (req, res) => {
     es: req.query.es,
     en: req.query.en
   }
+  const image = req.query.image
   const restrictions = []
   if (req.body.restrictions) {
     const restriction = new Restriction({ _id: ObjectId(), text: req.body.restrictions })
     restriction.save((e, r) => { if (e) throw Error('no document created') })
     restrictions.push(ObjectId(restriction.id))
   }
-  const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country, descriptions: descriptions, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', restrictions: restrictions })
+  const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country, descriptions: descriptions, image: image, restrictions: restrictions })
   museum.save((e, mus) => {
     if (e) console.log(e)
     res.status(200).send(mus)
@@ -349,9 +350,10 @@ router.post('/museums/:museumId', async (req, res) => {
     es: req.query.es,
     en: req.query.en
   }
+  const image = req.query.image
 
   // creating the new expo
-  const exposition = new Exposition({ _id: ObjectId(), name: name, room: room, descriptions: descriptions, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+  const exposition = new Exposition({ _id: ObjectId(), name: name, room: room, descriptions: descriptions, image: image })
   const exp = await exposition.save()
 
   // get the museum expos array
@@ -395,8 +397,9 @@ router.post('/museums/:museumId/:expositionId', async (req, res) => {
     es: req.query.es,
     en: req.query.en
   }
+  const image = req.query.image
   // creating the new artwork
-  const artwork = new Work({ _id: ObjectId(), title: title, author: author, score: score, type: type, descriptions: descriptions, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+  const artwork = new Work({ _id: ObjectId(), title: title, author: author, score: score, type: type, descriptions: descriptions, image: image })
   let work
   try {
     work = await artwork.save()
@@ -820,11 +823,6 @@ router.put('/museums/:museumId/:expositionId/:artworkId', async (req, res) => {
   } catch {
     res.status(404).send('There is no artwork for such id')
   }
-})
-
-router.post('/restrictions', async (req, res) => {
-  console.log(req.body)
-  res.send(req.body)
 })
 
 module.exports = router
