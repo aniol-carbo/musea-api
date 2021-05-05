@@ -711,7 +711,7 @@ router.put('/museums/:museumId', async (req, res) => {
       en: en
     }
     const image = req.query.image ? req.query.image : doc.image
-    const restrictions = doc.restrictions
+    const restrictions = []
     if (req.body.restrictions) {
       const restriction = new Restriction({ _id: ObjectId(), text: req.body.restrictions })
       restriction.save((e, r) => { if (e) throw Error('no document created') })

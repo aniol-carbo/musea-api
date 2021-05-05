@@ -82,6 +82,35 @@
             "description": "English description of the new museum"
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "restrictions": {
+                    "type": "object",
+                    "properties": {
+                      "ca": {
+                        "type": "string",
+                        "example": "Restricció en català"
+                      },
+                      "es": {
+                        "type": "string",
+                        "example": "Restricción en español"
+                      },
+                      "en": {
+                        "type": "string",
+                        "example": "Restriction in english"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The museum was created successfully",
@@ -247,6 +276,35 @@
             "description": "Url of the museum's image"
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "restrictions": {
+                    "type": "object",
+                    "properties": {
+                      "ca": {
+                        "type": "string",
+                        "example": "Restricció en català"
+                      },
+                      "es": {
+                        "type": "string",
+                        "example": "Restricción en español"
+                      },
+                      "en": {
+                        "type": "string",
+                        "example": "Restriction in english"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The museum was edited successfully",
