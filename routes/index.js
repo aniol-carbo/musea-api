@@ -516,40 +516,12 @@ router.post('/users/:username/points', async (req, res) => {
 })
 
 router.post('/quizzes', async (req, res) => {
-  const question = {
-    ca: req.query.question_ca,
-    es: req.query.question_es,
-    en: req.query.question_en
-  }
-  const points = req.query.points
-  const answers = [
-    {
-      ca: req.query.answer_1_ca,
-      es: req.query.answer_1_es,
-      en: req.query.answer_1_en,
-      correct: req.query.answer_1_correct
-    },
-    {
-      ca: req.query.answer_2_ca,
-      es: req.query.answer_2_es,
-      en: req.query.answer_2_en,
-      correct: req.query.answer_2_correct
-    },
-    {
-      ca: req.query.answer_3_ca,
-      es: req.query.answer_3_es,
-      en: req.query.answer_3_en,
-      correct: req.query.answer_3_correct
-    },
-    {
-      ca: req.query.answer_4_ca,
-      es: req.query.answer_4_es,
-      en: req.query.answer_4_en,
-      correct: req.query.answer_4_correct
-    }
-  ]
+  const question = req.body.quizz.question
+  const points = req.body.quizz.points
+  const answers = req.body.quizz.answers
+  const image = req.body.quizz.image
   try {
-    const quizz = new Quizz({ _id: ObjectId(), question: question, points: points, answers: answers })
+    const quizz = new Quizz({ _id: ObjectId(), question: question, points: points, answers: answers, image: image })
     const doc = await quizz.save()
     if (!doc) {
       throw new Error('no document found')

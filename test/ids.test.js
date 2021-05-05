@@ -7,10 +7,12 @@ const Exposition = require('../models/exposition')
 const Work = require('../models/artwork')
 const User = require('../models/user')
 const Quizz = require('../models/quizz')
+const Comment = require('../models/comment')
 
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const server = require('../server')
+const artwork = require('../models/artwork')
 // eslint-disable-next-line no-unused-vars
 const should = chai.should()
 
@@ -30,7 +32,10 @@ describe('Museums', () => {
             if (erro) console.log(erro)
             Quizz.deleteMany({}, (error) => {
               if (error) console.log(error)
-              done()
+              Comment.deleteMany({}, (error) => {
+                if (error) console.log(error)
+                done()
+              })
             })
           })
         })
@@ -448,6 +453,121 @@ describe('Quizzes', () => {
           res.body.should.be.a('object')
           done()
         })
+    })
+  })
+  // eslint-disable-next-line no-undef
+  describe('/POST/quizzes', () => {
+    // eslint-disable-next-line no-undef
+    it('it should create a new quizz', (done) => {
+      const question = {
+        ca: 'test catala',
+        es: 'test castellano',
+        en: 'test ingles'
+      }
+      const points = 1
+      const answers = [
+        {
+          ca: '1503',
+          es: '1503',
+          en: '1503',
+          correct: true
+        },
+        {
+          ca: '1703',
+          es: '1703',
+          en: '1703',
+          correct: false
+        },
+        {
+          ca: '1553',
+          es: '1553',
+          en: '1553',
+          correct: false
+        },
+        {
+          ca: '1803',
+          es: '1803',
+          en: '1803',
+          correct: false
+        }
+      ]
+      const image = 'testUrl'
+      chai.request(server)
+        .post('/quizzes')
+        .send({ quizz: { question: question, points: points, answers: answers, image: image } })
+        .end((error, res) => {
+          if (error) console.log(error)
+          res.should.have.status(200)
+          res.body.should.be.a('object')
+          res.body.question.should.be.a('object')
+          res.body.answers.should.be.a('array')
+          res.body.points.should.be.a('number').equal(points)
+          res.body.image.should.be.a('string').equal(image)
+          res.body.question.ca.should.be.a('string').equal(question.ca)
+          res.body.question.es.should.be.a('string').equal(question.es)
+          res.body.question.en.should.be.a('string').equal(question.en)
+          done()
+        })
+    })
+  })
+})
+
+// eslint-disable-next-line no-undef
+describe('Comments', () => {
+  // eslint-disable-next-line no-undef
+  describe('/GET/comments?artworkId=:artworkId', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET all the comments from an artwork', (done) => {
+      const artwork = new Work({ _id: ObjectId(), title: 'Gioconda', author: 'Leonardo da Vinci', score: 9.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      const comment = new Comment({ _id: ObjectId(), content: 'testComment', author: 'testUser', artwork: artwork.id, datetime: '2021-05-05T13:55:02.139+00:00', image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      artwork.save((e, work) => {
+        if (e) console.log(e)
+        comment.save((er, comment) => {
+          if (er) console.log(er)
+          chai.request(server)
+            .get(`/comments?artworkId=${work.id}`)
+            .end((err, res) => {
+              if (err) console.log(err)
+              res.should.have.status(200)
+              // eslint-disable-next-line no-unused-expressions
+              res.should.to.be.json
+              res.body.should.be.a('object')
+              res.body.comments.should.be.a('array')
+              res.body.comments[0].should.have.property('content')
+              res.body.comments[0].should.have.property('author')
+              res.body.comments[0].should.have.property('artwork')
+              res.body.comments[0].should.have.property('datetime')
+              res.body.comments[0].should.have.property('image')
+              done()
+            })
+        })
+      })
+    })
+  })
+  // eslint-disable-next-line no-undef
+  describe('/POST/comments', () => {
+    // eslint-disable-next-line no-undef
+    it('it should create a new comment', (done) => {
+      const w = new Work({ _id: ObjectId(), title: 'obra', author: 'autor', score: 3.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+      w.save((e, work) => {
+        if (e) console.log(e)
+        user.save((er, u) => {
+          if (er) console.log(er)
+          const content = 'test'
+          const author = u.userId
+          const artwork = work.id
+          chai.request(server)
+            .post(`/comments?content=${content}&author=${author}&artworkId=${artwork}`)
+            .end((error, res) => {
+              if (error) console.log(error)
+              // console.log(res.body)
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              done()
+            })
+        })
+      })
     })
   })
 })

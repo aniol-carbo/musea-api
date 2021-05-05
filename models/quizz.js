@@ -7,7 +7,8 @@ const QuizzSchema = new Schema({
   _id: ObjectId,
   question: Object,
   points: Number,
-  answers: Array
+  answers: Array,
+  image: String
 })
 
 module.exports = mongoose.model('quizzes', QuizzSchema)

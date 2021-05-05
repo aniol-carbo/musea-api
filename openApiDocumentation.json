@@ -1128,128 +1128,73 @@
         "tags": ["Quizzes"],
         "summary": "Create quizz",
         "description": "Creating a new quizz",
-        "parameters": [
-          {
-            "name": "question_ca",
-            "in": "query",
-            "required": true,
-            "description": "Question written in catalan"
-          },
-          {
-            "name": "question_es",
-            "in": "query",
-            "required": true,
-            "description": "Question written in spanish"
-          },
-          {
-            "name": "question_en",
-            "in": "query",
-            "required": true,
-            "description": "Question written in english"
-          },
-          {
-            "name": "points",
-            "in": "query",
-            "required": true,
-            "description": "Number of points of the quizz"
-          },
-          {
-            "name": "answer_1_ca",
-            "in": "query",
-            "required": true,
-            "description": "Answer 1 written in catalan"
-          },
-          {
-            "name": "answer_1_es",
-            "in": "query",
-            "required": true,
-            "description": "Answer 1 written in spanish"
-          },
-          {
-            "name": "answer_1_en",
-            "in": "query",
-            "required": true,
-            "description": "Answer 1 written in english"
-          },
-          {
-            "name": "answer_1_correct",
-            "in": "query",
-            "required": true,
-            "description": "Whether the answer 1 is correct or not"
-          },
-          {
-            "name": "answer_2_ca",
-            "in": "query",
-            "required": true,
-            "description": "Answer 2 written in catalan"
-          },
-          {
-            "name": "answer_2_es",
-            "in": "query",
-            "required": true,
-            "description": "Answer 2 written in spanish"
-          },
-          {
-            "name": "answer_2_en",
-            "in": "query",
-            "required": true,
-            "description": "Answer 2 written in english"
-          },
-          {
-            "name": "answer_2_correct",
-            "in": "query",
-            "required": true,
-            "description": "Whether the answer 2 is correct or not"
-          },
-          {
-            "name": "answer_3_ca",
-            "in": "query",
-            "required": true,
-            "description": "Answer 3 written in catalan"
-          },
-          {
-            "name": "answer_3_es",
-            "in": "query",
-            "required": true,
-            "description": "Answer 3 written in spanish"
-          },
-          {
-            "name": "answer_3_en",
-            "in": "query",
-            "required": true,
-            "description": "Answer 3 written in english"
-          },
-          {
-            "name": "answer_3_correct",
-            "in": "query",
-            "required": true,
-            "description": "Whether the answer 3 is correct or not"
-          },
-          {
-            "name": "answer_4_ca",
-            "in": "query",
-            "required": true,
-            "description": "Answer 4 written in catalan"
-          },
-          {
-            "name": "answer_4_es",
-            "in": "query",
-            "required": true,
-            "description": "Answer 4 written in spanish"
-          },
-          {
-            "name": "answer_4_en",
-            "in": "query",
-            "required": true,
-            "description": "Answer 4 written in english"
-          },
-          {
-            "name": "answer_4_correct",
-            "in": "query",
-            "required": true,
-            "description": "Whether the answer 4 is correct or not"
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "quizz": {
+                    "type": "object",
+                    "properties": {
+                      "question": {
+                        "type": "object",
+                        "properties": {
+                          "ca": {
+                            "type": "string",
+                            "example": "Pregunta en català"
+                          },
+                          "es": {
+                            "type": "string",
+                            "example": "Pregunta en español"
+                          },
+                          "en": {
+                            "type": "string",
+                            "example": "Question in english"
+                          }
+                        }
+                      },
+                      "answers": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "ca": {
+                              "type": "string",
+                              "example": "Resposta en català"
+                            },
+                            "es": {
+                              "type": "string",
+                              "example": "Respuesta en español"
+                            },
+                            "en": {
+                              "type": "string",
+                              "example": "Answer in english"
+                            },
+                            "correct": {
+                              "type": "bool",
+                              "example": true
+                            }
+                          }
+                        }
+                      },
+                      "points": {
+                        "type": "number",
+                        "example": 20
+                      },
+                      "image": {
+                        "type": "string",
+                        "example": "https://museaimages1.s3.amazonaws.com/museums/museo-del-prado.jpg"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "The quizz was created successfully",
