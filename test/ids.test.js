@@ -648,6 +648,29 @@ describe('Users', () => {
       })
     })
   })
+
+  // eslint-disable-next-line no-undef
+  describe('/PUT/users/:username', () => {
+    // eslint-disable-next-line no-undef
+    it('should update a single user', (done) => {
+      const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+      const obj = {
+        name: 'full name',
+        bio: 'changed bio'
+      }
+      user.save((e, us) => {
+        if (e) console.log(e)
+        chai.request(server)
+          .put(`/users/${us.userId}`)
+          .send(obj)
+          .end((err, res) => {
+            if (err) console.log(err)
+            res.should.have.status(200)
+            done()
+          })
+      })
+    })
+  })
 })
 
 // eslint-disable-next-line no-undef

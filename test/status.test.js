@@ -20,7 +20,7 @@ chai.use(chaiHttp)
 // eslint-disable-next-line no-undef
 describe('Error cases:', () => {
   // eslint-disable-next-line no-undef
-  describe('Museums:', () => {
+  describe('Museums', () => {
   // eslint-disable-next-line no-undef
     beforeEach((done) => {
       Museum.deleteMany({}, (e) => {
@@ -58,37 +58,34 @@ describe('Error cases:', () => {
           })
       })
     })
-  })
-
-  // eslint-disable-next-line no-undef
-  describe('/GET/:museumId/:expositionId ', () => {
     // eslint-disable-next-line no-undef
-    it('it should GET an exposition by the given id', (done) => {
-      chai.request(server)
-        .get('/museums/6048d3d2eaf9c527ba4de26a/6048d3d2eaf9c527ba4de26a')
-        .end((err, res) => {
-          if (err) console.log(err)
-          res.should.have.status(404)
-          done()
-        })
+    describe('/GET/:museumId/:expositionId ', () => {
+      // eslint-disable-next-line no-undef
+      it('it should GET an exposition by the given id', (done) => {
+        chai.request(server)
+          .get('/museums/6048d3d2eaf9c527ba4de26a/6048d3d2eaf9c527ba4de26a')
+          .end((err, res) => {
+            if (err) console.log(err)
+            res.should.have.status(404)
+            done()
+          })
+      })
     })
-  })
-
-  // eslint-disable-next-line no-undef
-  describe('/GET/:museumId/:expositionId/:artworkId ', () => {
     // eslint-disable-next-line no-undef
-    it('it should GET an artwork by the given id', (done) => {
-      chai.request(server)
-        .get('/museums/6048d3d2eaf9c527ba4de26a/6048d3d2eaf9c527ba4de26a6048d3d2eaf9c527ba4de26a')
-        .end((error, res) => {
-          if (error) console.log(error)
-          res.should.have.status(404)
-          done()
-        })
+    describe('/GET/:museumId/:expositionId/:artworkId ', () => {
+      // eslint-disable-next-line no-undef
+      it('it should GET an artwork by the given id', (done) => {
+        chai.request(server)
+          .get('/museums/6048d3d2eaf9c527ba4de26a/6048d3d2eaf9c527ba4de26a6048d3d2eaf9c527ba4de26a')
+          .end((error, res) => {
+            if (error) console.log(error)
+            res.should.have.status(404)
+            done()
+          })
+      })
     })
   })
 })
-
 // eslint-disable-next-line no-undef
 describe('Users', () => {
   // eslint-disable-next-line no-undef
@@ -206,15 +203,18 @@ describe('Users', () => {
 })
 
 // eslint-disable-next-line no-undef
-describe('/GET/comments?artworkId=:artworkId', () => {
+describe('Comments', () => {
   // eslint-disable-next-line no-undef
-  it('it should GET all comments of the given artwork id', (done) => {
-    chai.request(server)
-      .get('/comments?artworkId=7048d3d2eaf3d527ba4de26a')
-      .end((err, res) => {
-        if (err) console.log(err)
-        res.should.have.status(404)
-        done()
-      })
+  describe('/GET/comments?artworkId=:artworkId', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET all comments of the given artwork id', (done) => {
+      chai.request(server)
+        .get('/comments?artworkId=7048d3d2eaf3d527ba4de26a')
+        .end((err, res) => {
+          if (err) console.log(err)
+          res.should.have.status(404)
+          done()
+        })
+    })
   })
 })
