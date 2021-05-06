@@ -475,8 +475,8 @@ router.post('/users/:username/visited', async (req, res) => {
   let visited = []
   try {
     const museum = ObjectId(req.query.museum)
-    const mus = await Museum.findById(museum)
-    if (!mus) {
+    const m = await Museum.findById(museum)
+    if (!m) {
       throw new Error('no document found')
     }
     const doc = await User.findOne({ userId: user }, 'visited')
