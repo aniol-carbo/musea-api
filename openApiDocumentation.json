@@ -822,7 +822,7 @@
             "name": "username",
             "in": "path",
             "required": true,
-            "description": "Id of the desired user"
+            "description": "Username the desired user"
           }
         ],
         "responses": {
@@ -851,7 +851,7 @@
             "name": "username",
             "in": "path",
             "required": true,
-            "description": "Id of the desired user"
+            "description": "Username the desired user"
           },
           {
             "name": "name",
@@ -894,7 +894,7 @@
             "name": "username",
             "in": "path",
             "required": true,
-            "description": "Id of the desired user"
+            "description": "Username the desired user"
           }
         ],
         "responses": {
@@ -960,7 +960,7 @@
             "name": "username",
             "in": "path",
             "required": true,
-            "description": "Id of the desired user"
+            "description": "Username the desired user"
           }
         ],
         "responses": {
@@ -1026,7 +1026,7 @@
             "name": "username",
             "in": "path",
             "required": true,
-            "description": "Id of the desired user"
+            "description": "Username the desired user"
           }
         ],
         "responses": {
