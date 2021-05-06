@@ -10,6 +10,24 @@
       "url": "https://www.musea.com"
     }
   },
+  "tags": [
+    {
+      "name": "Museums",
+      "description": "Operations related to the museums"
+    },
+    {
+      "name": "Users",
+      "description": "Operations related to the users"
+    },
+    {
+      "name": "Comments",
+      "description": "Operations related to the comments"
+    },
+    {
+      "name": "Quizzes",
+      "description": "Operations related to the quizzes"
+    }
+  ],
   "paths": {
     "/museums": {
       "get": {

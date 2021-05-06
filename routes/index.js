@@ -273,7 +273,8 @@ router.get('/quizzes', async (req, res) => {
 router.get('/comments', async (req, res) => {
   const id = req.query.artworkId
   try {
-    if (id === undefined) {
+    const found = await Work.findById(id)
+    if (!found) {
       throw new Error('parameter required')
     }
     const doc = await Comment.find({ artwork: id })

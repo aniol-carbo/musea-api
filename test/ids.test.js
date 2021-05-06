@@ -255,6 +255,94 @@ describe('Museums', () => {
       })
     })
   })
+
+  // eslint-disable-next-line no-undef
+  describe('/DELETE/museums/:museumId', () => {
+    // eslint-disable-next-line no-undef
+    it('should delete a single museum', (done) => {
+      const museum = new Museum({ _id: ObjectId(), name: 'MACBA', address: 'Plaça Skaters', city: 'Barcelona', country: 'Spain', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', expositions: [], restrictions: [] })
+      museum.save((e, mus) => {
+        if (e) console.log(e)
+        chai.request(server)
+          .delete(`/museums/${mus.id}`)
+          .end((err, res) => {
+            if (err) console.log(err)
+            res.should.have.status(200)
+            done()
+          })
+      })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/DELETE/museums/:museumId/:expositionId', () => {
+    // eslint-disable-next-line no-undef
+    it('should delete a single exposition', (done) => {
+      const museum = new Museum({ _id: ObjectId(), name: 'MACBA', address: 'Plaça Skaters', city: 'Barcelona', country: 'Spain', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', expositions: [], restrictions: [] })
+      const exposition = new Exposition({ _id: ObjectId(), name: 'Main Expo', room: 'Main Hall', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, works: ['6048dd75eaf9c527ba4de26c'], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      museum.save((e, mus) => {
+        if (e) console.log(e)
+        exposition.save((er, expo) => {
+          if (er) console.log(er)
+          chai.request(server)
+            .delete(`/museums/${mus.id}/${expo.id}`)
+            .end((err, res) => {
+              if (err) console.log(err)
+              res.should.have.status(200)
+              done()
+            })
+        })
+      })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/DELETE/museums/:museumId/:expositionId/:artworkId', () => {
+    // eslint-disable-next-line no-undef
+    it('should delete a single artwork', (done) => {
+      const museum = new Museum({ _id: ObjectId(), name: 'MACBA', address: 'Plaça Skaters', city: 'Barcelona', country: 'Spain', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', expositions: [], restrictions: [] })
+      const exposition = new Exposition({ _id: ObjectId(), name: 'Main Expo', room: 'Main Hall', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, works: ['6048dd75eaf9c527ba4de26c'], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      const artwork = new Work({ _id: ObjectId(), title: 'Grito', author: 'Munch', score: 9.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      museum.save((e, mus) => {
+        if (e) console.log(e)
+        exposition.save((er, expo) => {
+          if (er) console.log(er)
+          artwork.save((err, a) => {
+            if (err) console.log(err)
+            chai.request(server)
+              .delete(`/museums/${mus.id}/${expo.id}/${a.id}`)
+              .end((erro, res) => {
+                if (erro) console.log(erro)
+                res.should.have.status(200)
+                done()
+              })
+          })
+        })
+      })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/PUT/museums/:museumId', () => {
+    // eslint-disable-next-line no-undef
+    it('should update a single museum', (done) => {
+      const museum = new Museum({ _id: ObjectId(), name: 'MACBA', address: 'Plaça Skaters', city: 'Barcelona', country: 'Spain', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', expositions: [], restrictions: [] })
+      const obj = {
+        ca: 'Nova descripcio'
+      }
+      museum.save((e, mus) => {
+        if (e) console.log(e)
+        chai.request(server)
+          .put(`/museums/${mus.id}`)
+          .send(obj)
+          .end((err, res) => {
+            if (err) console.log(err)
+            res.should.have.status(200)
+            done()
+          })
+      })
+    })
+  })
 })
 
 // eslint-disable-next-line no-undef
@@ -633,6 +721,27 @@ describe('Comments', () => {
               // console.log(res.body)
               res.should.have.status(200)
               res.body.should.be.a('object')
+              done()
+            })
+        })
+      })
+    })
+  })
+  // eslint-disable-next-line no-undef
+  describe('/DELETE/comments', () => {
+    // eslint-disable-next-line no-undef
+    it('should delete a single comment', (done) => {
+      const artwork = new Work({ _id: ObjectId(), title: 'Gioconda', author: 'Leonardo da Vinci', score: 9.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      const comment = new Comment({ _id: ObjectId(), content: 'testComment', author: 'testUser', artwork: artwork.id, datetime: '2021-05-05T13:55:02.139+00:00', image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      artwork.save((e, work) => {
+        if (e) console.log(e)
+        comment.save((er, com) => {
+          if (er) console.log(er)
+          chai.request(server)
+            .delete(`/comments/${com.id}`)
+            .end((err, res) => {
+              if (err) console.log(err)
+              res.should.have.status(200)
               done()
             })
         })
