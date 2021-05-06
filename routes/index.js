@@ -472,9 +472,13 @@ router.post('/users/:username/favourites', async (req, res) => {
 // POST /users/userName/visited with params museum=museumId
 router.post('/users/:username/visited', async (req, res) => {
   const user = req.params.username
-  const museum = ObjectId(req.query.museum)
   let visited = []
   try {
+    const museum = ObjectId(req.query.museum)
+    const mus = await Museum.findById(museum)
+    if (!mus) {
+      throw new Error('no document found')
+    }
     const doc = await User.findOne({ userId: user }, 'visited')
     visited = doc.visited
     if (!doc) {
@@ -492,7 +496,7 @@ router.post('/users/:username/visited', async (req, res) => {
     })
     res.redirect('/users/' + user)
   } catch {
-    res.status(404).send('There is no user for such id')
+    res.status(404).send('Invalid parameters')
   }
 })
 

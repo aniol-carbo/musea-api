@@ -434,6 +434,76 @@ describe('Users', () => {
       })
     })
   })
+
+  // eslint-disable-next-line no-undef
+  describe('/POST/users/:username/favourites', () => {
+    // eslint-disable-next-line no-undef
+    it('it should mark a museum as favourites', (done) => {
+      const museum = new Museum({ _id: ObjectId(), name: 'testVisitedMuseum', address: 'testVisitedAddress', city: 'testVisitedCity', country: 'testVisitedCountry', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, expositions: [], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      museum.save((e, m) => {
+        if (e) console.log(e)
+        const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+        user.save((err, u) => {
+          if (err) console.log(err)
+          const username = u.userId
+          const museumId = m.id
+          chai.request(server)
+            .post(`/users/${username}/favourites?museum=${museumId}`)
+            // .send({ username: username, email: email })
+            .end((error, res) => {
+              if (error) console.log(error)
+              // console.log(res.body)
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.user.should.have.property('name')
+              res.body.user.should.have.property('userId')
+              res.body.user.should.have.property('points')
+              res.body.user.should.have.property('favourites')
+              res.body.user.should.have.property('bio')
+              res.body.user.should.have.property('profilePic')
+              res.body.user.should.have.property('premium')
+              res.body.user.should.have.property('visited')
+              done()
+            })
+        })
+      })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/POST/users/:username/visited', () => {
+    // eslint-disable-next-line no-undef
+    it('it should mark a museum as visited', (done) => {
+      const museum = new Museum({ _id: ObjectId(), name: 'testVisitedMuseum', address: 'testVisitedAddress', city: 'testVisitedCity', country: 'testVisitedCountry', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, expositions: [], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      museum.save((e, m) => {
+        if (e) console.log(e)
+        const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+        user.save((err, u) => {
+          if (err) console.log(err)
+          const username = u.userId
+          const museumId = m.id
+          chai.request(server)
+            .post(`/users/${username}/visited?museum=${museumId}`)
+            // .send({ username: username, email: email })
+            .end((error, res) => {
+              if (error) console.log(error)
+              // console.log(res.body)
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.user.should.have.property('name')
+              res.body.user.should.have.property('userId')
+              res.body.user.should.have.property('points')
+              res.body.user.should.have.property('favourites')
+              res.body.user.should.have.property('bio')
+              res.body.user.should.have.property('profilePic')
+              res.body.user.should.have.property('premium')
+              res.body.user.should.have.property('visited')
+              done()
+            })
+        })
+      })
+    })
+  })
 })
 
 // eslint-disable-next-line no-undef
