@@ -12,7 +12,6 @@ const Comment = require('../models/comment')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const server = require('../server')
-const artwork = require('../models/artwork')
 // eslint-disable-next-line no-unused-vars
 const should = chai.should()
 
@@ -32,8 +31,8 @@ describe('Museums', () => {
             if (erro) console.log(erro)
             Quizz.deleteMany({}, (error) => {
               if (error) console.log(error)
-              Comment.deleteMany({}, (error) => {
-                if (error) console.log(error)
+              Comment.deleteMany({}, (errorr) => {
+                if (errorr) console.log(errorr)
                 done()
               })
             })
@@ -522,7 +521,7 @@ describe('Comments', () => {
       const comment = new Comment({ _id: ObjectId(), content: 'testComment', author: 'testUser', artwork: artwork.id, datetime: '2021-05-05T13:55:02.139+00:00', image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
       artwork.save((e, work) => {
         if (e) console.log(e)
-        comment.save((er, comment) => {
+        comment.save((er, com) => {
           if (er) console.log(er)
           chai.request(server)
             .get(`/comments?artworkId=${work.id}`)

@@ -1174,7 +1174,7 @@
                               "example": "Answer in english"
                             },
                             "correct": {
-                              "type": "bool",
+                              "type": "boolean",
                               "example": true
                             }
                           }
