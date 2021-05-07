@@ -1098,7 +1098,13 @@
             "name": "points",
             "in": "query",
             "required": true,
-            "description": "Number of points to add to the user"
+            "description": "The number of points won by the user"
+          },
+          {
+            "name": "total",
+            "in": "query",
+            "required": true,
+            "description": "The quizz's total points"
           }
         ],
         "responses": {
@@ -1326,6 +1332,37 @@
           },
           "404": {
             "description": "No comments found by the given id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prizes": {
+      "get": {
+        "tags": ["Prizes"],
+        "summary": "Get prizes",
+        "description": "Retrieving the user's prizes",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "description": "Username of the desired user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The prizes were retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "No prizes found",
             "content": {
               "application/json": {
               }

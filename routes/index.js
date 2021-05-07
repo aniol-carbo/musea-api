@@ -25,6 +25,7 @@ const User = require('../models/user')
 const Restriction = require('../models/restriction')
 const Quizz = require('../models/quizz')
 const Comment = require('../models/comment')
+const Prize = require('../models/prize')
 
 router.get('/museums', async (req, res) => {
   try {
@@ -287,6 +288,20 @@ router.get('/comments', async (req, res) => {
   }
 })
 
+router.get('/prizes', async (req, res) => {
+  const user = req.query.user
+  try {
+    const found = await User.findOne({ userId: user })
+    if (!found) {
+      throw new Error('parameter required')
+    }
+    const doc = await Prize.find({ user: user })
+    res.json({ prizes: doc })
+  } catch {
+    res.status(404).send('Invalid user')
+  }
+})
+
 // ----------------- POST -------------------- //
 
 router.post('/museums', (req, res) => {
@@ -403,15 +418,16 @@ router.post('/museums/:museumId/:expositionId', async (req, res) => {
 })
 
 // POST /users with params username, email and profilePic
-router.post('/users', (req, res) => {
+router.post('/users', async (req, res) => {
   const username = req.query.username
   const email = req.query.email
   const profilePic = 'https://museaimages1.s3.amazonaws.com/users/unknown.jpg'
-  const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [] })
-  user.save((e, us) => {
-    if (e) console.log(e)
-    res.send(us)
-  })
+  const doc = await User.findOne({ userId: username })
+  if (!doc) {
+    const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [] })
+    await user.save()
+  }
+  res.redirect(`/users/${username}`)
 })
 
 // POST /users/userName/likes with params artwork=artworkId
@@ -504,17 +520,38 @@ router.post('/users/:username/visited', async (req, res) => {
 // POST /users/userName/points with params points=puntosGanados
 router.post('/users/:username/points', async (req, res) => {
   const user = req.params.username
+  const total = parseInt(req.query.total)
+  const points = parseInt(req.query.points)
   try {
     const doc = await User.findOne({ userId: user }, 'points')
-    let points = doc.points
     if (!doc) {
       throw new Error('no document found')
     }
-    points += req.query.points
+    let userPoints = doc.points
+    userPoints += points
     await User.updateOne({ userId: user }, {
-      points: points
+      points: userPoints
     })
-    res.redirect('/users/' + user)
+    let badge, image
+    const ratio = points / total
+    if (ratio >= 0.75) {
+      if (ratio < 0.85) {
+        badge = '3'
+        image = ''
+      } else if (ratio < 0.99) {
+        badge = '2'
+        image = ''
+      } else if (ratio === 1) {
+        badge = '1'
+        image = ''
+      }
+      const prize = new Prize({ _id: ObjectId(), user: user, points: points, total: total, badge: badge, image: image })
+      const p = await prize.save()
+      if (!p) {
+        throw new Error('no document found')
+      }
+    }
+    res.redirect(`/users/${user}`)
   } catch {
     res.status(404).send('There is no user for such id')
   }

@@ -536,9 +536,9 @@ describe('Users', () => {
           if (error) console.log(error)
           // console.log(res.body)
           res.should.have.status(200)
-          res.body.should.be.a('object')
-          res.body.userId.should.be.a('string').equal(username)
-          res.body.email.should.be.a('string').equal(email)
+          res.body.user.should.be.a('object')
+          res.body.user.userId.should.be.a('string').equal(username)
+          res.body.user.email.should.be.a('string').equal(email)
           done()
         })
     })
@@ -645,6 +645,38 @@ describe('Users', () => {
               done()
             })
         })
+      })
+    })
+  })
+
+  // eslint-disable-next-line no-undef
+  describe('/POST/users/:username/points', () => {
+    // eslint-disable-next-line no-undef
+    it('it should add points to a user', (done) => {
+      const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+      user.save((err, u) => {
+        if (err) console.log(err)
+        const username = u.userId
+        const points = 18
+        const total = 25
+        chai.request(server)
+          .post(`/users/${username}/points?points=${points}&total=${total}`)
+          // .send({ username: username, email: email })
+          .end((error, res) => {
+            if (error) console.log(error)
+            // console.log(res.body)
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.user.should.have.property('name')
+            res.body.user.should.have.property('userId')
+            res.body.user.should.have.property('points').be.least(points)
+            res.body.user.should.have.property('favourites')
+            res.body.user.should.have.property('bio')
+            res.body.user.should.have.property('profilePic')
+            res.body.user.should.have.property('premium')
+            res.body.user.should.have.property('visited')
+            done()
+          })
       })
     })
   })
@@ -797,7 +829,6 @@ describe('Comments', () => {
             .post(`/comments?content=${content}&author=${author}&artworkId=${artwork}`)
             .end((error, res) => {
               if (error) console.log(error)
-              // console.log(res.body)
               res.should.have.status(200)
               res.body.should.be.a('object')
               done()
@@ -824,6 +855,31 @@ describe('Comments', () => {
               done()
             })
         })
+      })
+    })
+  })
+})
+
+// eslint-disable-next-line no-undef
+describe('Prizes', () => {
+  // eslint-disable-next-line no-undef
+  describe('/GET/prizes?user=username', () => {
+    // eslint-disable-next-line no-undef
+    it('it should GET all the prizes won by the user', (done) => {
+      const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+      user.save((e, u) => {
+        if (e) console.log(e)
+        chai.request(server)
+          .get(`/prizes?user=${user.userId}`)
+          .end((err, res) => {
+            if (err) console.log(err)
+            res.should.have.status(200)
+            // eslint-disable-next-line no-unused-expressions
+            res.should.to.be.json
+            res.body.should.be.a('object')
+            res.body.prizes.should.be.a('array')
+            done()
+          })
       })
     })
   })
