@@ -314,7 +314,7 @@ router.post('/museums', (req, res) => {
     es: req.query.es,
     en: req.query.en
   }
-  const image = req.query.image
+  const image = req.query.image ? req.query.image : 'https://museaimages1.s3.amazonaws.com/museums/no-image.png'
   const restrictions = []
   if (req.body.restrictions) {
     const restriction = new Restriction({ _id: ObjectId(), text: req.body.restrictions })
@@ -337,7 +337,7 @@ router.post('/museums/:museumId', async (req, res) => {
     es: req.query.es,
     en: req.query.en
   }
-  const image = req.query.image
+  const image = req.query.image ? req.query.image : 'https://museaimages1.s3.amazonaws.com/expositions/no-image.png'
 
   // creating the new expo
   const exposition = new Exposition({ _id: ObjectId(), name: name, room: room, descriptions: descriptions, image: image })
