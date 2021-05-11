@@ -72,6 +72,19 @@ describe('Error cases:', () => {
       })
     })
     // eslint-disable-next-line no-undef
+    describe('/DELETE/museums/:museumId/:expositionId', () => {
+      // eslint-disable-next-line no-undef
+      it('should delete a single exposition from a museum', (done) => {
+        chai.request(server)
+          .delete('/museums/6048d3d2eaf9c427ba4de26a/6048d3d2eaf9c427ba4de26a')
+          .end((err, res) => {
+            if (err) console.log(err)
+            res.should.have.status(404)
+            done()
+          })
+      })
+    })
+    // eslint-disable-next-line no-undef
     describe('/GET/:museumId/:expositionId/:artworkId ', () => {
       // eslint-disable-next-line no-undef
       it('it should GET an artwork by the given id', (done) => {
@@ -83,6 +96,19 @@ describe('Error cases:', () => {
             done()
           })
       })
+    })
+  })
+  // eslint-disable-next-line no-undef
+  describe('/DELETE/museums/:museumId/:expositionId/:artworkId', () => {
+    // eslint-disable-next-line no-undef
+    it('should delete a single artwork from an exposition', (done) => {
+      chai.request(server)
+        .delete('/museums/6048d3d2eaf9c427ba4de26a/6048d3d2eaf9c427ba4de26a/6048d3d2eaf9c427ba4de26a')
+        .end((err, res) => {
+          if (err) console.log(err)
+          res.should.have.status(404)
+          done()
+        })
     })
   })
 })
@@ -210,6 +236,19 @@ describe('Comments', () => {
     it('it should GET all comments of the given artwork id', (done) => {
       chai.request(server)
         .get('/comments?artworkId=7048d3d2eaf3d527ba4de26a')
+        .end((err, res) => {
+          if (err) console.log(err)
+          res.should.have.status(404)
+          done()
+        })
+    })
+  })
+  // eslint-disable-next-line no-undef
+  describe('/DELETE/comments/:commentId', () => {
+    // eslint-disable-next-line no-undef
+    it('should delete a single comment', (done) => {
+      chai.request(server)
+        .delete('/comments/6048d3d2eaf9c427ba4de26a')
         .end((err, res) => {
           if (err) console.log(err)
           res.should.have.status(404)
