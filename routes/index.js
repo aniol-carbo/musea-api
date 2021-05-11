@@ -384,7 +384,7 @@ router.post('/museums/:museumId/:expositionId', async (req, res) => {
     es: req.query.es,
     en: req.query.en
   }
-  const image = req.query.image
+  const image = req.query.image ? req.query.image : 'https://museaimages1.s3.amazonaws.com/artworks/no-image.png'
   // creating the new artwork
   const artwork = new Work({ _id: ObjectId(), title: title, author: author, score: score, type: type, descriptions: descriptions, image: image })
   let work
