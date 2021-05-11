@@ -59,6 +59,19 @@ describe('Error cases:', () => {
       })
     })
     // eslint-disable-next-line no-undef
+    describe('/DELETE/museums/:museumId', () => {
+      // eslint-disable-next-line no-undef
+      it('it should DELETE a museum identified by museumid', (done) => {
+        chai.request(server)
+          .delete('/museums/6048d3faeaf9c527ba4de26a')
+          .end((er, res) => {
+            if (er) console.log(er)
+            res.should.have.status(404)
+            done()
+          })
+      })
+    })
+    // eslint-disable-next-line no-undef
     describe('/PUT/museums/:museumId', () => {
       // eslint-disable-next-line no-undef
       it('it should edit a museum´s info with museumid', (done) => {

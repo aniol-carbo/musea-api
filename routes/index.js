@@ -597,7 +597,7 @@ router.post('/comments', async (req, res) => {
 router.delete('/museums/:museumId', async (req, res) => {
   const museum = req.params.museumId
   try {
-    const deleted = await Museum.deleteOne({ _id: museum })
+    const deleted = await Museum.findOneAndDelete({ _id: museum })
     if (!deleted) {
       throw new Error('no document found')
     } else {
