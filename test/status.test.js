@@ -45,7 +45,7 @@ describe('Error cases:', () => {
     })
 
     // eslint-disable-next-line no-undef
-    describe('/GET/:museumId', () => {
+    describe('/GET/museums/:museumId', () => {
       // eslint-disable-next-line no-undef
       it('it should check there is no museum with an invalid id', (done) => {
         chai.request(server)
@@ -59,13 +59,39 @@ describe('Error cases:', () => {
       })
     })
     // eslint-disable-next-line no-undef
-    describe('/GET/:museumId/:expositionId ', () => {
+    describe('/PUT/museums/:museumId', () => {
+      // eslint-disable-next-line no-undef
+      it('it should edit a museum´s info with museumid', (done) => {
+        chai.request(server)
+          .put('/museums/6048d3d2eaf9c527ba4de26a?ca=test&es=test&en=test&image=testImage')
+          .end((er, res) => {
+            if (er) console.log(er)
+            res.should.have.status(404)
+            done()
+          })
+      })
+    })
+    // eslint-disable-next-line no-undef
+    describe('/GET/museums/:museumId/:expositionId ', () => {
       // eslint-disable-next-line no-undef
       it('it should GET an exposition by the given id', (done) => {
         chai.request(server)
           .get('/museums/6048d3d2eaf9c527ba4de26a/6048d3d2eaf9c527ba4de26a')
           .end((err, res) => {
             if (err) console.log(err)
+            res.should.have.status(404)
+            done()
+          })
+      })
+    })
+    // eslint-disable-next-line no-undef
+    describe('/PUT/museums/:museumId/:expositionId', () => {
+      // eslint-disable-next-line no-undef
+      it('it should edit an expo´s info from a museum with museumid', (done) => {
+        chai.request(server)
+          .put('/museums/6048d3d2eaf9c527ba4de26a/6048d3d2eaf9c527ba4de26a?room=test&ca=test&es=test&en=test&image=testImage')
+          .end((er, res) => {
+            if (er) console.log(er)
             res.should.have.status(404)
             done()
           })
@@ -99,6 +125,19 @@ describe('Error cases:', () => {
     })
   })
   // eslint-disable-next-line no-undef
+  describe('/PUT/museums/:museumId/:expositionId/:artworkId', () => {
+    // eslint-disable-next-line no-undef
+    it('it should edit an artwork´s info from an exposition with expositionId', (done) => {
+      chai.request(server)
+        .put('/museums/6048d3d2eaf9c527ba4de26a/6048d3d2eaf9c527ba4de26a/6048d3d2eaf9c527ba4de26a?type=test&room=test&ca=test&es=test&en=test&image=testImage&score=1')
+        .end((er, res) => {
+          if (er) console.log(er)
+          res.should.have.status(404)
+          done()
+        })
+    })
+  })
+  // eslint-disable-next-line no-undef
   describe('/DELETE/museums/:museumId/:expositionId/:artworkId', () => {
     // eslint-disable-next-line no-undef
     it('should delete a single artwork from an exposition', (done) => {
@@ -128,7 +167,19 @@ describe('Users', () => {
         })
     })
   })
-
+  // eslint-disable-next-line no-undef
+  describe('/PUT/users/:userId ', () => {
+    // eslint-disable-next-line no-undef
+    it('it should edit a user with the given id', (done) => {
+      chai.request(server)
+        .put('/users/6048d3d2eaf9c527ba4de26a?name=testName&bio=testBio')
+        .end((error, res) => {
+          if (error) console.log(error)
+          res.should.have.status(404)
+          done()
+        })
+    })
+  })
   // eslint-disable-next-line no-undef
   describe('/GET/users/:userId/likes ', () => {
     // eslint-disable-next-line no-undef
