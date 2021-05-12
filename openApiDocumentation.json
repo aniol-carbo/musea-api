@@ -26,6 +26,10 @@
     {
       "name": "Quizzes",
       "description": "Operations related to the quizzes"
+    },
+    {
+      "name": "Prizes",
+      "description": "Operations related to the prizes"
     }
   ],
   "paths": {
