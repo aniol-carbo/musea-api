@@ -1,7 +1,5 @@
 process.env.MODE = 'test'
 
-const mongoose = require('mongoose')
-const ObjectId = mongoose.Types.ObjectId
 const Museum = require('../models/museum')
 const Exposition = require('../models/exposition')
 const Work = require('../models/artwork')
