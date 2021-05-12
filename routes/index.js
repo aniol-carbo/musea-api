@@ -538,10 +538,10 @@ router.post('/users/:username/points', async (req, res) => {
       if (ratio < 0.85) {
         badge = '3'
         image = ''
-      } else if (ratio < 0.99) {
+      } else if (ratio < 0.95) {
         badge = '2'
         image = ''
-      } else if (ratio === 1) {
+      } else if (ratio >= 0.95) {
         badge = '1'
         image = ''
       }
@@ -612,7 +612,7 @@ router.delete('/museums/:museumId/:expositionId', async (req, res) => {
   const museum = req.params.museumId
   const exposition = req.params.expositionId
   try {
-    const deleted = await Exposition.deleteOne({ _id: exposition })
+    const deleted = await Exposition.findOneAndDelete({ _id: exposition })
     if (!deleted) {
       throw new Error('no document found')
     } else {
@@ -642,7 +642,7 @@ router.delete('/museums/:museumId/:expositionId/:artworkId', async (req, res) =>
   const exposition = req.params.expositionId
   const artwork = req.params.artworkId
   try {
-    const deleted = await Work.deleteOne({ _id: artwork })
+    const deleted = await Work.findOneAndDelete({ _id: artwork })
     if (!deleted) {
       throw new Error('no document found')
     } else {
