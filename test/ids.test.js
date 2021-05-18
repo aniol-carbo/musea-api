@@ -8,6 +8,8 @@ const Work = require('../models/artwork')
 const User = require('../models/user')
 const Quizz = require('../models/quizz')
 const Comment = require('../models/comment')
+const Rating = require('../models/rating')
+const Report = require('../models/report')
 
 const chai = require('chai')
 const chaiHttp = require('chai-http')
@@ -31,9 +33,15 @@ describe('Museums', () => {
             if (erro) console.log(erro)
             Quizz.deleteMany({}, (error) => {
               if (error) console.log(error)
-              Comment.deleteMany({}, (errorr) => {
-                if (errorr) console.log(errorr)
-                done()
+              Comment.deleteMany({}, (error2) => {
+                if (error2) console.log(error2)
+                Report.deleteMany({}, (error3) => {
+                  if (error3) console.log(error3)
+                  Rating.deleteMany({}, (error4) => {
+                    if (error4) console.log(error4)
+                    done()
+                  })
+                })
               })
             })
           })
@@ -424,11 +432,11 @@ describe('Users', () => {
   describe('/GET/users/:userId ', () => {
     // eslint-disable-next-line no-undef
     it('it should GET a user by the given id', (done) => {
-      const user = new User({ _id: ObjectId('606c6f07e8f2bfb8ab667e6f'), userId: 'admin', name: 'Juan', bio: 'Me encanta Da Vinci', favourites: ['6048dd75eaf9c527ba4de26c'], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: ['6048d3d2eaf9c527ba4de26b'] })
+      const user = new User({ _id: ObjectId('606c6f07e8f2bfb8ab667e6f'), userId: 'admin', email: 'test@test.com', name: 'Juan', bio: 'Me encanta Da Vinci', favourites: ['6048dd75eaf9c527ba4de26c'], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: ['6048d3d2eaf9c527ba4de26b'] })
       user.save((e, u) => {
         if (e) console.log(e)
         chai.request(server)
-          .get('/users/' + u.userId)
+          .get('/users/' + u.email)
         //   .send(museum)
           .end((error, res) => {
             if (error) console.log(error)
@@ -551,7 +559,7 @@ describe('Users', () => {
       const artwork = new Work({ _id: ObjectId(), title: 'Nova obra', author: 'Munch', score: 9.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
       artwork.save((e, a) => {
         if (e) console.log(e)
-        const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+        const user = new User({ _id: ObjectId(), userId: 'Nou usuari', email: 'test@test.com', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
         user.save((err, u) => {
           if (err) console.log(err)
           const username = u.userId
@@ -564,14 +572,14 @@ describe('Users', () => {
               // console.log(res.body)
               res.should.have.status(200)
               res.body.should.be.a('object')
-              res.body.user.should.have.property('name')
-              res.body.user.should.have.property('userId')
-              res.body.user.should.have.property('points')
-              res.body.user.should.have.property('favourites')
-              res.body.user.should.have.property('bio')
-              res.body.user.should.have.property('profilePic')
-              res.body.user.should.have.property('premium')
-              res.body.user.should.have.property('visited')
+              res.body.should.have.property('name')
+              res.body.should.have.property('userId')
+              res.body.should.have.property('points')
+              res.body.should.have.property('favourites')
+              res.body.should.have.property('bio')
+              res.body.should.have.property('profilePic')
+              res.body.should.have.property('premium')
+              res.body.should.have.property('visited')
               done()
             })
         })
@@ -586,7 +594,7 @@ describe('Users', () => {
       const museum = new Museum({ _id: ObjectId(), name: 'testVisitedMuseum', address: 'testVisitedAddress', city: 'testVisitedCity', country: 'testVisitedCountry', descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, expositions: [], image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
       museum.save((e, m) => {
         if (e) console.log(e)
-        const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+        const user = new User({ _id: ObjectId(), userId: 'newUser', email: 'test@test.com', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
         user.save((err, u) => {
           if (err) console.log(err)
           const username = u.userId
@@ -599,14 +607,14 @@ describe('Users', () => {
               // console.log(res.body)
               res.should.have.status(200)
               res.body.should.be.a('object')
-              res.body.user.should.have.property('name')
-              res.body.user.should.have.property('userId')
-              res.body.user.should.have.property('points')
-              res.body.user.should.have.property('favourites')
-              res.body.user.should.have.property('bio')
-              res.body.user.should.have.property('profilePic')
-              res.body.user.should.have.property('premium')
-              res.body.user.should.have.property('visited')
+              res.body.should.have.property('name')
+              res.body.should.have.property('userId')
+              res.body.should.have.property('points')
+              res.body.should.have.property('favourites')
+              res.body.should.have.property('bio')
+              res.body.should.have.property('profilePic')
+              res.body.should.have.property('premium')
+              res.body.should.have.property('visited')
               done()
             })
         })
@@ -634,14 +642,14 @@ describe('Users', () => {
               // console.log(res.body)
               res.should.have.status(200)
               res.body.should.be.a('object')
-              res.body.user.should.have.property('name')
-              res.body.user.should.have.property('userId')
-              res.body.user.should.have.property('points')
-              res.body.user.should.have.property('favourites')
-              res.body.user.should.have.property('bio')
-              res.body.user.should.have.property('profilePic')
-              res.body.user.should.have.property('premium')
-              res.body.user.should.have.property('visited')
+              res.body.should.have.property('name')
+              res.body.should.have.property('userId')
+              res.body.should.have.property('points')
+              res.body.should.have.property('favourites')
+              res.body.should.have.property('bio')
+              res.body.should.have.property('profilePic')
+              res.body.should.have.property('premium')
+              res.body.should.have.property('visited')
               done()
             })
         })
@@ -667,14 +675,14 @@ describe('Users', () => {
             // console.log(res.body)
             res.should.have.status(200)
             res.body.should.be.a('object')
-            res.body.user.should.have.property('name')
-            res.body.user.should.have.property('userId')
-            res.body.user.should.have.property('points').be.least(points)
-            res.body.user.should.have.property('favourites')
-            res.body.user.should.have.property('bio')
-            res.body.user.should.have.property('profilePic')
-            res.body.user.should.have.property('premium')
-            res.body.user.should.have.property('visited')
+            res.body.should.have.property('name')
+            res.body.should.have.property('userId')
+            res.body.should.have.property('points')
+            res.body.should.have.property('favourites')
+            res.body.should.have.property('bio')
+            res.body.should.have.property('profilePic')
+            res.body.should.have.property('premium')
+            res.body.should.have.property('visited')
             done()
           })
       })
@@ -695,6 +703,23 @@ describe('Users', () => {
         chai.request(server)
           .put(`/users/${us.userId}`)
           .send(obj)
+          .end((err, res) => {
+            if (err) console.log(err)
+            res.should.have.status(200)
+            done()
+          })
+      })
+    })
+  })
+  // eslint-disable-next-line no-undef
+  describe('/PUT/users/:username/premium', () => {
+    // eslint-disable-next-line no-undef
+    it('should change the premium state from a user', (done) => {
+      const user = new User({ _id: ObjectId(), userId: 'newuser', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+      user.save((e, us) => {
+        if (e) console.log(e)
+        chai.request(server)
+          .put(`/users/${us.userId}/premium`)
           .end((err, res) => {
             if (err) console.log(err)
             res.should.have.status(200)
@@ -880,6 +905,69 @@ describe('Prizes', () => {
             res.body.prizes.should.be.a('array')
             done()
           })
+      })
+    })
+  })
+})
+
+// eslint-disable-next-line no-undef
+describe('Ratings', () => {
+  // eslint-disable-next-line no-undef
+  describe('/POST/ratings', () => {
+    // eslint-disable-next-line no-undef
+    it('it should create a new rating', (done) => {
+      const work = new Work({ _id: ObjectId(), title: 'obra', author: 'autor', score: 3.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', email: 'test@test.com', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [], totalBans: 0, totalReports: 0 })
+      work.save((e, w) => {
+        if (e) console.log(e)
+        user.save((er, u) => {
+          if (er) console.log(er)
+          const score = 5
+          const user = u.userId
+          const artwork = w.id
+          chai.request(server)
+            .post(`/ratings?user=${user}&artwork=${artwork}&score=${score}`)
+            .end((error, res) => {
+              if (error) console.log(error)
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              done()
+            })
+        })
+      })
+    })
+  })
+})
+
+// eslint-disable-next-line no-undef
+describe('Reports', () => {
+  // eslint-disable-next-line no-undef
+  describe('/POST/reports', () => {
+    // eslint-disable-next-line no-undef
+    it('it should create a new report', (done) => {
+      const informant = new User({ _id: ObjectId(), userId: 'new1', name: 'Jose', email: 'test@test.com', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [], totalBans: 0, totalReports: 0 })
+      const reported = new User({ _id: ObjectId(), userId: 'new2', name: 'Jose', email: 'test@test.com', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [], totalBans: 0, totalReports: 0 })
+      const artwork = new Work({ _id: ObjectId(), title: 'Gioconda', author: 'Leonardo da Vinci', score: 9.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      const comment = new Comment({ _id: ObjectId(), author: reported.userId, content: 'text', artwork: artwork.id })
+      artwork.save((e, a) => {
+        if (e) console.log(e)
+        informant.save((er, i) => {
+          if (er) console.log(er)
+          reported.save((err, r) => {
+            if (err) console.log(err)
+            comment.save((erro, c) => {
+              if (erro) console.log(erro)
+              chai.request(server)
+                .post(`/reports?informant=${i.userId}&comment=${c.id}`)
+                .end((error, res) => {
+                  if (error) console.log(error)
+                  res.should.have.status(200)
+                  res.body.should.be.a('object')
+                  done()
+                })
+            })
+          })
+        })
       })
     })
   })

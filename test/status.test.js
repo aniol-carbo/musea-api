@@ -1,11 +1,16 @@
 process.env.MODE = 'test'
 
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId
+
 const Museum = require('../models/museum')
 const Exposition = require('../models/exposition')
 const Work = require('../models/artwork')
 const User = require('../models/user')
 const Quizz = require('../models/quizz')
 const Comment = require('../models/comment')
+const Rating = require('../models/rating')
+const Report = require('../models/report')
 
 const chai = require('chai')
 const chaiHttp = require('chai-http')
@@ -31,9 +36,15 @@ describe('Error cases:', () => {
               if (erro) console.log(erro)
               Quizz.deleteMany({}, (error) => {
                 if (error) console.log(error)
-                Comment.deleteMany({}, (errorr) => {
-                  if (errorr) console.log(errorr)
-                  done()
+                Comment.deleteMany({}, (error2) => {
+                  if (error2) console.log(error2)
+                  Rating.deleteMany({}, (error3) => {
+                    if (error3) console.log(error3)
+                    Report.deleteMany({}, (error4) => {
+                      if (error4) console.log(error4)
+                      done()
+                    })
+                  })
                 })
               })
             })
@@ -316,6 +327,70 @@ describe('Comments', () => {
           res.should.have.status(404)
           done()
         })
+    })
+  })
+})
+
+// eslint-disable-next-line no-undef
+describe('Ratings', () => {
+  // eslint-disable-next-line no-undef
+  describe('/POST/ratings', () => {
+    // eslint-disable-next-line no-undef
+    it('it should fail when creating an existing rating', (done) => {
+      const work = new Work({ _id: ObjectId(), title: 'obra', author: 'autor', score: 3.8, descriptions: { ca: 'Catala', es: 'Castellano', en: 'English' }, image: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg' })
+      const user = new User({ _id: ObjectId(), userId: 'Nou usuari', name: 'Jose', email: 'test@test.com', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [], totalBans: 0, totalReports: 0 })
+      const rating = new Rating({ _id: ObjectId(), user: user.userId, artwork: work.id, score: 5, date: new Date() })
+      work.save((e, w) => {
+        if (e) console.log(e)
+        user.save((er, u) => {
+          if (er) console.log(er)
+          rating.save((err, r) => {
+            if (err) console.log(err)
+            const score = 5
+            const user = u.userId
+            const artwork = w.id
+            chai.request(server)
+              .post(`/ratings?user=${user}&artwork=${artwork}&score=${score}`)
+              .end((error, res) => {
+                if (error) console.log(error)
+                res.should.have.status(401)
+                done()
+              })
+          })
+        })
+      })
+    })
+  })
+})
+
+// eslint-disable-next-line no-undef
+describe('Reports', () => {
+  // eslint-disable-next-line no-undef
+  describe('/POST/reports', () => {
+    // eslint-disable-next-line no-undef
+    it('it should fail when creating an existing report', (done) => {
+      const user = new User({ _id: ObjectId(), userId: 'new1', name: 'Jose', email: 'test@test.com', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [], totalBans: 0, totalReports: 0 })
+      const user2 = new User({ _id: ObjectId(), userId: 'new2', name: 'Jose', email: 'test@test.com', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [], totalBans: 0, totalReports: 0 })
+      const comment = new Comment({ _id: ObjectId(), author: user.userId, content: 'text' })
+      const report = new Report({ _id: ObjectId(), informant: user.userId, reported: user2.userId, comment: comment.id, date: new Date() })
+      comment.save((e, c) => {
+        if (e) console.log(e)
+        user.save((er, u) => {
+          if (er) console.log(er)
+          report.save((err, r) => {
+            if (err) console.log(err)
+            const user = u.userId
+            const commentId = c.id
+            chai.request(server)
+              .post(`/reports?informant=${user}&comment=${commentId}`)
+              .end((error, res) => {
+                if (error) console.log(error)
+                res.should.have.status(404)
+                done()
+              })
+          })
+        })
+      })
     })
   })
 })

@@ -453,7 +453,8 @@ router.post('/users/:username/likes', async (req, res) => {
     await User.updateOne({ userId: user }, {
       likes: likes
     })
-    res.redirect(`/users/${user}`)
+    const updated = await User.findOne({ userId: user })
+    res.status(200).send(updated)
   } catch {
     res.status(404).send('There is no user for such id')
   }
@@ -483,7 +484,8 @@ router.post('/users/:username/favourites', async (req, res) => {
     await User.updateOne({ userId: user }, {
       favourites: favourites
     })
-    res.redirect('/users/' + user)
+    const updated = await User.findOne({ userId: user })
+    res.status(200).send(updated)
   } catch {
     res.status(404).send('There is no user for such id')
   }
@@ -514,7 +516,8 @@ router.post('/users/:username/visited', async (req, res) => {
     await User.updateOne({ userId: user }, {
       visited: visited
     })
-    res.redirect('/users/' + user)
+    const updated = await User.findOne({ userId: user })
+    res.status(200).send(updated)
   } catch {
     res.status(404).send('Invalid parameters')
   }
@@ -554,7 +557,8 @@ router.post('/users/:username/points', async (req, res) => {
         throw new Error('no document found')
       }
     }
-    res.redirect(`/users/${user}`)
+    const updated = await User.findOne({ userId: user })
+    res.status(200).send(updated)
   } catch {
     res.status(404).send('There is no user for such id')
   }
