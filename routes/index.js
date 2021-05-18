@@ -633,7 +633,6 @@ router.post('/reports', async (req, res) => {
   const informant = req.query.informant
   const commentId = req.query.comment
   const date = Date.now()
-  const banDate = new Date()
   try {
     const found = await Report.where({ informant: informant, comment: commentId })
     if (found.length > 0) {
@@ -647,6 +646,7 @@ router.post('/reports', async (req, res) => {
       const report = new Report({ _id: ObjectId(), informant: informant, reported: reported, comment: commentId, date: date })
       const doc = await report.save()
       const user = await User.find({ userId: reported })
+      const banDate = user.banDate
       let totalBans = user[0].totalBans
       let totalReports = user[0].totalReports
       if (totalReports === 4) { // ban quan t'han reportat 5 vegades -> 3 dies
