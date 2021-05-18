@@ -26,6 +26,7 @@ const Restriction = require('../models/restriction')
 const Quizz = require('../models/quizz')
 const Comment = require('../models/comment')
 const Prize = require('../models/prize')
+const Rating = require('../models/rating')
 
 router.get('/museums', async (req, res) => {
   try {
@@ -167,11 +168,11 @@ router.get('/users', async (req, res) => {
   }
 })
 
-// GET /users/username to get the user's info
-router.get('/users/:username', async (req, res) => {
-  const id = req.params.username
+// GET /users/email to get the user's info
+router.get('/users/:email', async (req, res) => {
+  const email = req.params.email
   try {
-    const doc = await User.findOne({ userId: id })
+    const doc = await User.findOne({ email: email })
     if (!doc) {
       throw new Error('no document found')
     }
@@ -422,12 +423,13 @@ router.post('/users', async (req, res) => {
   const username = req.query.username
   const email = req.query.email
   const profilePic = 'https://museaimages1.s3.amazonaws.com/users/unknown.jpg'
+  const banDate = new Date()
   const doc = await User.findOne({ userId: username })
   if (!doc) {
-    const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [] })
+    const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [], banDate: banDate, totalBans: 0 })
     await user.save()
   }
-  res.redirect(`/users/${username}`)
+  res.redirect(`/users/${email}`)
 })
 
 // POST /users/userName/likes with params artwork=artworkId
@@ -589,6 +591,35 @@ router.post('/comments', async (req, res) => {
     res.status(200).send(doc)
   } catch {
     res.status(500).send('Could not create the comment')
+  }
+})
+
+router.post('/ratings', async (req, res) => {
+  const user = req.query.user
+  const artwork = req.query.artwork
+  const score = req.query.score
+  const date = new Date()
+  try {
+    const rating = new Rating({ _id: ObjectId(), user: user, artwork: artwork, score: score, date: date })
+    const doc = await rating.save()
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    const actualScores = await Rating.where({ artwork: artwork })
+    let total = 0
+    for (const elem of actualScores) {
+      total += elem.score
+    }
+    const newScore = total / actualScores.length
+    const updated = await Work.findOneAndUpdate({ _id: artwork }, {
+      score: newScore
+    })
+    if (!updated) {
+      throw new Error('no document found')
+    }
+    res.status(200).send(doc)
+  } catch {
+    res.status(500).send('Could not save the rating')
   }
 })
 
