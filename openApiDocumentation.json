@@ -888,6 +888,37 @@
         }
       }
     },
+    "/users/{username}/premium": {
+      "put": {
+        "tags": ["Users"],
+        "summary": "Update premium value for a user",
+        "description": "Updating the premium value of a user by the given id",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Username the desired user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user was correctly updated",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/{username}/likes": {
       "get": {
         "tags": ["Users"],
