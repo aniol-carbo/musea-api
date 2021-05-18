@@ -792,6 +792,27 @@ router.put('/users/:username', async (req, res) => {
   }
 })
 
+router.put('/users/:username/premium', async (req, res) => {
+  const user = req.params.username
+  try {
+    const doc = await User.findOne({ userId: user })
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    const premium = doc.premium
+    const updated = await User.updateOne({ userId: user }, {
+      premium: !premium
+    })
+    if (!updated) {
+      throw new Error('no document found')
+    } else {
+      res.status(200).send('User edited')
+    }
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
+})
+
 router.put('/museums/:museumId', async (req, res) => {
   const museum = req.params.museumId
   try {
