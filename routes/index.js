@@ -10,7 +10,7 @@ const ObjectId = mongoose.Types.ObjectId
 let url
 if (process.env.MODE !== 'test') url = process.env.DATABASE_URL
 else url = process.env.TEST_DATABASE_URL
-mongoose.connect(url, { useNewUrlParser: true })
+mongoose.connect(url, { useNewUrlParser: true, useFindAndModify: false })
 const db = mongoose.connection
 db.on('error', error => console.error(error))
 // db.once('open', () => console.log('Connected to Mongoose'))
@@ -600,26 +600,31 @@ router.post('/ratings', async (req, res) => {
   const score = req.query.score
   const date = new Date()
   try {
-    const rating = new Rating({ _id: ObjectId(), user: user, artwork: artwork, score: score, date: date })
-    const doc = await rating.save()
-    if (!doc) {
-      throw new Error('no document found')
+    const found = await Rating.where({ user: user, artwork: artwork })
+    if (found.length > 0) {
+      throw new Error('already existing rating')
+    } else {
+      const rating = new Rating({ _id: ObjectId(), user: user, artwork: artwork, score: score, date: date })
+      const doc = await rating.save()
+      if (!doc) {
+        throw new Error('no document found')
+      }
+      const actualScores = await Rating.where({ artwork: artwork })
+      let total = 0
+      for (const elem of actualScores) {
+        total += elem.score
+      }
+      const newScore = total / actualScores.length
+      const updated = await Work.findOneAndUpdate({ _id: artwork }, {
+        score: newScore
+      })
+      if (!updated) {
+        throw new Error('no document found')
+      }
+      res.status(200).send(doc)
     }
-    const actualScores = await Rating.where({ artwork: artwork })
-    let total = 0
-    for (const elem of actualScores) {
-      total += elem.score
-    }
-    const newScore = total / actualScores.length
-    const updated = await Work.findOneAndUpdate({ _id: artwork }, {
-      score: newScore
-    })
-    if (!updated) {
-      throw new Error('no document found')
-    }
-    res.status(200).send(doc)
   } catch {
-    res.status(500).send('Could not save the rating')
+    res.status(401).send('You have already voted this artwork')
   }
 })
 

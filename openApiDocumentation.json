@@ -1374,6 +1374,80 @@
           }
         }
       }
+    },
+    "/ratings": {
+      "post": {
+        "tags": ["Ratings"],
+        "summary": "Rate an artwork",
+        "description": "Rating an artwork with the given score",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "description": "Username of the rating user"
+          },
+          {
+            "name": "artwork",
+            "in": "query",
+            "required": true,
+            "description": "Id of the rated artwork"
+          },
+          {
+            "name": "score",
+            "in": "query",
+            "required": true,
+            "description": "Score given to the artwork"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The rating was added",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "You have already voted this artwork",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports": {
+      "post": {
+        "tags": ["PENDENT!"],
+        "summary": "Get prizes",
+        "description": "Retrieving the user's prizes",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "description": "Username of the desired user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The prizes were retrieved",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "No prizes found",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
