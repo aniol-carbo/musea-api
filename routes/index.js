@@ -27,6 +27,7 @@ const Quizz = require('../models/quizz')
 const Comment = require('../models/comment')
 const Prize = require('../models/prize')
 const Rating = require('../models/rating')
+const Report = require('../models/report')
 
 router.get('/museums', async (req, res) => {
   try {
@@ -625,6 +626,52 @@ router.post('/ratings', async (req, res) => {
     }
   } catch {
     res.status(401).send('You have already voted this artwork')
+  }
+})
+
+router.post('/reports', async (req, res) => {
+  const informant = req.query.informant
+  const commentId = req.query.comment
+  const date = Date.now()
+  const banDate = new Date()
+  try {
+    const found = await Report.where({ informant: informant, comment: commentId })
+    if (found.length > 0) {
+      throw new Error('already existing rating')
+    } else {
+      const comment = await Comment.findById(commentId)
+      if (!comment) {
+        throw new Error('no document found')
+      }
+      const reported = comment.author
+      const report = new Report({ _id: ObjectId(), informant: informant, reported: reported, comment: commentId, date: date })
+      const doc = await report.save()
+      const user = await User.find({ userId: reported })
+      let totalBans = user[0].totalBans
+      let totalReports = user[0].totalReports
+      if (totalReports === 4) { // ban quan t'han reportat 5 vegades -> 3 dies
+        banDate.setDate(banDate.getDate() + 3)
+        totalBans += 1
+      } else if (totalReports === 9) { // ban quan t'han reportat 10 vegades -> 7 dies
+        banDate.setDate(banDate.getDate() + 7)
+        totalBans += 1
+      } else if (totalReports === 14) { // ban quan t'han reportat 15 vegades -> permaban
+        banDate.setDate(banDate.getDate() + 1000000)
+        totalBans += 1
+      }
+      totalReports += 1
+      const updated = await User.findOneAndUpdate({ userId: reported }, {
+        banDate: banDate,
+        totalBans: totalBans,
+        totalReports: totalReports
+      })
+      if (!updated) {
+        throw new Error('no document found')
+      }
+      res.status(200).send(doc)
+    }
+  } catch {
+    res.status(404).send('Comment not found')
   }
 })
 

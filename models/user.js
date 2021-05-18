@@ -16,7 +16,8 @@ const UserSchema = new Schema({
   visited: Array,
   likes: Array,
   banDate: Date,
-  totalBans: Number
+  totalBans: Number,
+  totalReports: Number
 })
 
 module.exports = mongoose.model('users', UserSchema)

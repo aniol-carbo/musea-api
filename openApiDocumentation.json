@@ -1420,27 +1420,33 @@
     },
     "/reports": {
       "post": {
-        "tags": ["PENDENT!"],
-        "summary": "Get prizes",
-        "description": "Retrieving the user's prizes",
+        "tags": ["Reports"],
+        "summary": "Create a report",
+        "description": "Reporting a user's comment",
         "parameters": [
           {
-            "name": "user",
+            "name": "informant",
             "in": "query",
             "required": true,
-            "description": "Username of the desired user"
+            "description": "Username of the informant user"
+          },
+          {
+            "name": "comment",
+            "in": "query",
+            "required": true,
+            "description": "Id of the reported comment"
           }
         ],
         "responses": {
           "200": {
-            "description": "The prizes were retrieved",
+            "description": "The comment was reported successfully",
             "content": {
               "application/json": {
               }
             }
           },
           "404": {
-            "description": "No prizes found",
+            "description": "Couldn't find a comment with such id",
             "content": {
               "application/json": {
               }
