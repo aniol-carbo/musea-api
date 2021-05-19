@@ -826,7 +826,7 @@
             "name": "email",
             "in": "path",
             "required": true,
-            "description": "Username the desired user"
+            "description": "Email of the desired user"
           }
         ],
         "responses": {
