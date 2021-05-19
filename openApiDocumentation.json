@@ -816,14 +816,14 @@
         }
       }
     },
-    "/users/{username}": {
+    "/users/{email}": {
       "get": {
         "tags": ["Users"],
-        "summary": "Get user by id",
-        "description": "Retrieving a user by the given id",
+        "summary": "Get user by email",
+        "description": "Retrieving a user by the given email",
         "parameters": [
           {
-            "name": "username",
+            "name": "email",
             "in": "path",
             "required": true,
             "description": "Username the desired user"
@@ -838,7 +838,7 @@
             }
           },
           "404": {
-            "description": "There is no user for such id",
+            "description": "There is no user with such email",
             "content": {
               "application/json": {
               }
