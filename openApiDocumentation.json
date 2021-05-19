@@ -1452,7 +1452,7 @@
     "/reports": {
       "post": {
         "tags": ["Reports"],
-        "summary": "Create a report",
+        "summary": "Report a user",
         "description": "Reporting a user's comment",
         "parameters": [
           {

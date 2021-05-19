@@ -158,7 +158,8 @@ router.get('/users', async (req, res) => {
         const user = {
           username: elem.userId,
           fullName: elem.name,
-          premium: elem.premium
+          premium: elem.premium,
+          email: elem.email
         }
         result.push(user)
       }
@@ -523,7 +524,7 @@ router.post('/users/:username/visited', async (req, res) => {
   }
 })
 
-// POST /users/userName/points with params points=puntosGanados
+// POST/users/userName/points with params points=puntosGanados
 router.post('/users/:username/points', async (req, res) => {
   const user = req.params.username
   const total = parseInt(req.query.total)
@@ -557,6 +558,26 @@ router.post('/users/:username/points', async (req, res) => {
         throw new Error('no document found')
       }
     }
+    const updated = await User.findOne({ userId: user })
+    res.status(200).send(updated)
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
+})
+
+// POST /users/userName/likes with params artwork=artworkId
+router.post('/users/:username/ban', async (req, res) => {
+  const user = req.params.username
+  try {
+    const doc = await User.findOne({ userId: user })
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    const banDate = doc.banDate
+    banDate.setDate(banDate.getDate() + 1000000)
+    await User.updateOne({ userId: user }, {
+      banDate: banDate
+    })
     const updated = await User.findOne({ userId: user })
     res.status(200).send(updated)
   } catch {
