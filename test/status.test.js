@@ -347,10 +347,10 @@ describe('Ratings', () => {
           rating.save((err, r) => {
             if (err) console.log(err)
             const score = 5
-            const user = u.userId
+            const userId = u.userId
             const artwork = w.id
             chai.request(server)
-              .post(`/ratings?user=${user}&artwork=${artwork}&score=${score}`)
+              .post(`/ratings?user=${userId}&artwork=${artwork}&score=${score}`)
               .end((error, res) => {
                 if (error) console.log(error)
                 res.should.have.status(401)
@@ -379,10 +379,10 @@ describe('Reports', () => {
           if (er) console.log(er)
           report.save((err, r) => {
             if (err) console.log(err)
-            const user = u.userId
+            const userId = u.userId
             const commentId = c.id
             chai.request(server)
-              .post(`/reports?informant=${user}&comment=${commentId}`)
+              .post(`/reports?informant=${userId}&comment=${commentId}`)
               .end((error, res) => {
                 if (error) console.log(error)
                 res.should.have.status(404)

@@ -923,10 +923,10 @@ describe('Ratings', () => {
         user.save((er, u) => {
           if (er) console.log(er)
           const score = 5
-          const user = u.userId
+          const userId = u.userId
           const artwork = w.id
           chai.request(server)
-            .post(`/ratings?user=${user}&artwork=${artwork}&score=${score}`)
+            .post(`/ratings?user=${userId}&artwork=${artwork}&score=${score}`)
             .end((error, res) => {
               if (error) console.log(error)
               res.should.have.status(200)
