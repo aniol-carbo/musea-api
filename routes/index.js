@@ -592,6 +592,24 @@ router.post('/users/:username/ban', async (req, res) => {
   }
 })
 
+router.post('/users/:username/unban', async (req, res) => {
+  const user = req.params.username
+  try {
+    const doc = await User.findOne({ userId: user })
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    const banDate = new Date()
+    await User.updateOne({ userId: user }, {
+      banDate: banDate
+    })
+    const updated = await User.findOne({ userId: user })
+    res.status(200).send(updated)
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
+})
+
 router.post('/quizzes', async (req, res) => {
   const question = req.body.quizz.question
   const points = req.body.quizz.points
