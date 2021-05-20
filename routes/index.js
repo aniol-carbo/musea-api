@@ -671,20 +671,23 @@ router.post('/reports', async (req, res) => {
       const report = new Report({ _id: ObjectId(), informant: informant, reported: reported, comment: commentId, date: date })
       const doc = await report.save()
       const user = await User.find({ userId: reported })
-      const banDate = user.banDate
+      let sum = 0
       let totalBans = user[0].totalBans
       let totalReports = user[0].totalReports
       if (totalReports === 4) { // ban quan t'han reportat 5 vegades -> 3 dies
-        banDate.setDate(banDate.getDate() + 3)
+        sum = 3 * 86400000
         totalBans += 1
       } else if (totalReports === 9) { // ban quan t'han reportat 10 vegades -> 7 dies
-        banDate.setDate(banDate.getDate() + 7)
+        sum = 7 * 86400000
         totalBans += 1
       } else if (totalReports === 14) { // ban quan t'han reportat 15 vegades -> permaban
-        banDate.setDate(banDate.getDate() + 1000000)
+        sum = 10000 * 86400000
         totalBans += 1
       }
       totalReports += 1
+      const miliseconds = sum + date
+      const banDate = new Date(miliseconds)
+      console.log(banDate)
       const updated = await User.findOneAndUpdate({ userId: reported }, {
         banDate: banDate,
         totalBans: totalBans,
