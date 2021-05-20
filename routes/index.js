@@ -426,12 +426,19 @@ router.post('/users', async (req, res) => {
   const email = req.query.email
   const profilePic = 'https://museaimages1.s3.amazonaws.com/users/unknown.jpg'
   const banDate = new Date()
-  const doc = await User.findOne({ userId: username })
-  if (!doc) {
-    const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [], banDate: banDate, totalBans: 0, totalReports: 0 })
-    await user.save()
+  try {
+    const doc = await User.findOne({ userId: username })
+    const doc2 = await User.findOne({ email: email })
+    if (!doc && !doc2) {
+      const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [], banDate: banDate, totalBans: 0, totalReports: 0 })
+      const newuser = await user.save()
+      res.status(200).json(newuser)
+    } else {
+      throw new Error('This user already exists')
+    }
+  } catch {
+    res.status(400).send('This user already exists')
   }
-  res.redirect(`/users/${email}`)
 })
 
 // POST /users/userName/likes with params artwork=artworkId
