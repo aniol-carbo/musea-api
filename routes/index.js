@@ -428,7 +428,7 @@ router.post('/users', async (req, res) => {
   const banDate = new Date()
   const doc = await User.findOne({ userId: username })
   if (!doc) {
-    const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [], banDate: banDate, totalBans: 0 })
+    const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [], banDate: banDate, totalBans: 0, totalReports: 0 })
     await user.save()
   }
   res.redirect(`/users/${email}`)
