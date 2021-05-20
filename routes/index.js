@@ -425,12 +425,12 @@ router.post('/users', async (req, res) => {
   const username = req.query.username
   const email = req.query.email
   const profilePic = 'https://museaimages1.s3.amazonaws.com/users/unknown.jpg'
-  const banDate = new Date()
+  const newDate = new Date()
   try {
     const doc = await User.findOne({ userId: username })
     const doc2 = await User.findOne({ email: email })
     if (!doc && !doc2) {
-      const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [], banDate: banDate, totalBans: 0, totalReports: 0 })
+      const user = new User({ _id: ObjectId(), userId: username, name: '', email: email, bio: '', favourites: [], points: 0, profilePic: profilePic, premium: false, visited: [], banDate: newDate, totalBans: 0, totalReports: 0, premiumDate: newDate })
       const newuser = await user.save()
       res.status(200).json(newuser)
     } else {
@@ -846,19 +846,30 @@ router.put('/users/:username', async (req, res) => {
 
 router.put('/users/:username/premium', async (req, res) => {
   const user = req.params.username
+  const days = parseInt(req.query.days)
+  const today = new Date()
   try {
     const doc = await User.findOne({ userId: user })
     if (!doc) {
       throw new Error('no document found')
     }
-    const premium = doc.premium
-    const updated = await User.updateOne({ userId: user }, {
-      premium: !premium
+    const premiumDate = new Date(doc.premiumDate)
+    const premiumMiliseconds = premiumDate.getTime()
+    let newMiliseconds
+    if (today >= premiumDate) {
+      newMiliseconds = Date.now() + days * 86400000
+    } else {
+      newMiliseconds = premiumMiliseconds + days * 86400000
+    }
+    const newDate = new Date(newMiliseconds)
+    const updated = await User.findOneAndUpdate({ userId: user }, {
+      premium: true,
+      premiumDate: newDate
     })
     if (!updated) {
       throw new Error('no document found')
     } else {
-      res.status(200).send('User edited')
+      res.status(200).send(updated)
     }
   } catch {
     res.status(404).send('There is no user for such id')

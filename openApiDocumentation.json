@@ -899,14 +899,20 @@
     "/users/{username}/premium": {
       "put": {
         "tags": ["Users"],
-        "summary": "Update premium value for a user",
-        "description": "Updating the premium value of a user by the given id",
+        "summary": "Add premium membership",
+        "description": "Adding days to the premium membership",
         "parameters": [
           {
             "name": "username",
             "in": "path",
             "required": true,
             "description": "Username the desired user"
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "required": true,
+            "description": "Number of days to add to the premium membership"
           }
         ],
         "responses": {

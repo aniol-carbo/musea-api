@@ -714,12 +714,13 @@ describe('Users', () => {
   // eslint-disable-next-line no-undef
   describe('/PUT/users/:username/premium', () => {
     // eslint-disable-next-line no-undef
-    it('should change the premium state from a user', (done) => {
-      const user = new User({ _id: ObjectId(), userId: 'newuser', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [] })
+    it('should change the premium date from a user', (done) => {
+      const newDate = new Date()
+      const user = new User({ _id: ObjectId(), userId: 'newuser', name: 'Jose', bio: 'Me encanta Da Vinci', favourites: [], points: 21, profilePic: 'https://cronicaglobal.elespanol.com/uploads/s1/46/47/88/5/macba.jpeg', premium: true, visited: [], likes: [], premiumDate: newDate })
       user.save((e, us) => {
         if (e) console.log(e)
         chai.request(server)
-          .put(`/users/${us.userId}/premium`)
+          .put(`/users/${us.userId}/premium?days=5`)
           .end((err, res) => {
             if (err) console.log(err)
             res.should.have.status(200)
