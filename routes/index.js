@@ -687,7 +687,6 @@ router.post('/reports', async (req, res) => {
       totalReports += 1
       const miliseconds = sum + date
       const banDate = new Date(miliseconds)
-      console.log(banDate)
       const updated = await User.findOneAndUpdate({ userId: reported }, {
         banDate: banDate,
         totalBans: totalBans,
