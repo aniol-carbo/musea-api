@@ -30,6 +30,14 @@
     {
       "name": "Prizes",
       "description": "Operations related to the prizes"
+    },
+    {
+      "name": "Reports",
+      "description": "Operations related to the reporting of comments"
+    },
+    {
+      "name": "Ratings",
+      "description": "Operations related to the ratings of artworks"
     }
   ],
   "paths": {
@@ -1176,6 +1184,37 @@
         "responses": {
           "200": {
             "description": "The user was banned successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{username}/unban": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Unban user",
+        "description": "Unbanning a user permanently",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Username of the user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user was unbanned successfully",
             "content": {
               "application/json": {
               }
