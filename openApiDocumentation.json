@@ -1160,6 +1160,37 @@
         }
       }
     },
+    "/users/{username}/ban": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Ban user",
+        "description": "Banning a user permanently",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Username of the user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user was banned successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
     "/quizzes": {
       "get": {
         "tags": ["Quizzes"],
