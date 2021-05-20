@@ -572,6 +572,27 @@ router.post('/users/:username/points', async (req, res) => {
   }
 })
 
+// POST/users/userName/points with params points=puntosGanados
+router.post('/users/:username/spend', async (req, res) => {
+  const user = req.params.username
+  const points = parseInt(req.query.points)
+  try {
+    const doc = await User.findOne({ userId: user }, 'points')
+    if (!doc) {
+      throw new Error('no document found')
+    }
+    let userPoints = doc.points
+    userPoints -= points
+    await User.findOneAndUpdate({ userId: user }, {
+      points: userPoints
+    })
+    const updated = await User.findOne({ userId: user })
+    res.status(200).send(updated)
+  } catch {
+    res.status(404).send('There is no user for such id')
+  }
+})
+
 // POST /users/userName/likes with params artwork=artworkId
 router.post('/users/:username/ban', async (req, res) => {
   const user = req.params.username

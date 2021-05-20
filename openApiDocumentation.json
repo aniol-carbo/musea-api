@@ -1174,6 +1174,43 @@
         }
       }
     },
+    "/users/{username}/spend": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Spend points",
+        "description": "Spending points from the given user",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Username of the user"
+          },
+          {
+            "name": "points",
+            "in": "query",
+            "required": true,
+            "description": "The number of points spent"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user's points were spent successfully",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "There is no user for such id",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/{username}/ban": {
       "post": {
         "tags": ["Users"],
