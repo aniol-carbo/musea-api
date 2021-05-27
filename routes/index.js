@@ -10,7 +10,7 @@ const ObjectId = mongoose.Types.ObjectId
 let url
 if (process.env.MODE !== 'test') url = process.env.DATABASE_URL
 else url = process.env.TEST_DATABASE_URL
-mongoose.connect(url, { useNewUrlParser: true, useFindAndModify: false })
+mongoose.connect(url, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })
 const db = mongoose.connection
 db.on('error', error => console.error(error))
 // db.once('open', () => console.log('Connected to Mongoose'))
@@ -28,6 +28,7 @@ const Comment = require('../models/comment')
 const Prize = require('../models/prize')
 const Rating = require('../models/rating')
 const Report = require('../models/report')
+const MapQuest = require('../external-apis/mapquest')
 
 router.get('/museums', async (req, res) => {
   try {
@@ -308,27 +309,40 @@ router.get('/prizes', async (req, res) => {
 // ----------------- POST -------------------- //
 
 router.post('/museums', (req, res) => {
-  const name = req.query.name
-  const address = req.query.address
-  const city = req.query.city
-  const country = req.query.country
-  const descriptions = {
-    ca: req.query.ca,
-    es: req.query.es,
-    en: req.query.en
+  try {
+    const fullAddress = `${req.query.address},${req.query.city},${req.query.country}`
+    const result = MapQuest.getCoordinatesInfo(fullAddress)
+    result.then((details) => {
+      const location = []
+      const latitude = details ? details.latitude : 0
+      const longitude = details ? details.longitude : 0
+      location.push(latitude)
+      location.push(longitude)
+      const name = req.query.name
+      const address = req.query.address
+      const city = req.query.city
+      const country = req.query.country
+      const descriptions = {
+        ca: req.query.ca,
+        es: req.query.es,
+        en: req.query.en
+      }
+      const image = req.query.image ? req.query.image : 'https://museaimages1.s3.amazonaws.com/museums/no-image.png'
+      const restrictions = []
+      if (req.body.restrictions) {
+        const restriction = new Restriction({ _id: ObjectId(), text: req.body.restrictions })
+        restriction.save((e, r) => { if (e) throw Error('no document created') })
+        restrictions.push(ObjectId(restriction.id))
+      }
+      const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country, location: location, descriptions: descriptions, image: image, restrictions: restrictions })
+      museum.save((e, mus) => {
+        if (e) console.log(e)
+        res.status(200).send(mus)
+      })
+    })
+  } catch {
+    res.status(500).send('Invalid address')
   }
-  const image = req.query.image ? req.query.image : 'https://museaimages1.s3.amazonaws.com/museums/no-image.png'
-  const restrictions = []
-  if (req.body.restrictions) {
-    const restriction = new Restriction({ _id: ObjectId(), text: req.body.restrictions })
-    restriction.save((e, r) => { if (e) throw Error('no document created') })
-    restrictions.push(ObjectId(restriction.id))
-  }
-  const museum = new Museum({ _id: ObjectId(), name: name, address: address, city: city, country: country, descriptions: descriptions, image: image, restrictions: restrictions })
-  museum.save((e, mus) => {
-    if (e) console.log(e)
-    res.status(200).send(mus)
-  })
 })
 
 router.post('/museums/:museumId', async (req, res) => {

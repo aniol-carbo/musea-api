@@ -5,9 +5,7 @@
     "title": "Musea API",
     "description": "Musea REST API for retrieving all the information about our museums, expositions and artworks",
     "contact": {
-      "name": "Musea Team",
-      "email": "info@musea.com",
-      "url": "https://www.musea.com"
+      "name": "Musea Team"
     }
   },
   "tags": [
