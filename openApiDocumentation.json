@@ -876,6 +876,12 @@
             "in": "query",
             "required": true,
             "description": "New bio of the user"
+          },
+          {
+            "name": "profilePic",
+            "in": "query",
+            "required": false,
+            "description": "New pic of the user"
           }
         ],
         "responses": {
