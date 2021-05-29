@@ -851,7 +851,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/users/{username}": {
       "put": {
         "tags": ["Users"],
         "summary": "Edit the user info",

@@ -853,7 +853,6 @@ router.delete('/comments/:commentId', async (req, res) => {
 
 // ----------------- PUT -------------------- //
 
-// PUT /users/userName with params bio=newBio & name=newName
 router.put('/users/:username', async (req, res) => {
   const user = req.params.username
   try {
